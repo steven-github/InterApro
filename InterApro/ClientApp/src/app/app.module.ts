@@ -12,6 +12,12 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { CreateAccountComponent } from './create-account/create-account.component';
 import { LogInComponent } from './log-in/log-in.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { BuyerComponent } from './dashboard/buyer/buyer.component';
+import { BossComponent } from './dashboard/boss/boss.component';
+import { FinancialApproverComponent } from './dashboard/financial-approver/financial-approver.component';
+import { ProfileComponent } from './dashboard/buyer/profile/profile.component';
+import { HistoryComponent } from './dashboard/buyer/history/history.component';
+import { RequestsComponent } from './dashboard/buyer/requests/requests.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +28,13 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
     FetchDataComponent,
     CreateAccountComponent,
     LogInComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    BuyerComponent,
+    BossComponent,
+    FinancialApproverComponent,
+    ProfileComponent,
+    HistoryComponent,
+    RequestsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -30,12 +42,15 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: '', component: LogInComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'log-in', component: LogInComponent },
       { path: 'forgot-password', component: ForgotPasswordComponent },
       { path: 'create-account', component: CreateAccountComponent },
+      { path: 'dashboard/buyer', component: BuyerComponent },
+      { path: 'dashboard/boss', component: BossComponent },
+      { path: 'dashboard/financial-approver', component: FinancialApproverComponent },
     ])
   ],
   providers: [],
