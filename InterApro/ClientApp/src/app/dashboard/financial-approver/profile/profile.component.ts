@@ -1,20 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MustMatch } from 'src/app/_helpers/must-match.validator';
 
 @Component({
-  selector: 'app-log-in',
-  templateUrl: './log-in.component.html',
-  styleUrls: ['./log-in.component.scss']
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.scss']
 })
-export class LogInComponent implements OnInit {
+export class ProfileApproverComponent implements OnInit {
 
-  loginForm: FormGroup;
+  form: FormGroup;
   submitted = false;
 
   constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    this.loginForm = this.formBuilder.group({
+    this.form = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       username: ['', Validators.required],
@@ -22,22 +23,24 @@ export class LogInComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
       department: ['', Validators.required],
+    }, {
+      validator: MustMatch('password', 'confirmPassword')
     });
   }
 
   // convenience getter for easy access to form fields
-  get f() { return this.loginForm.controls; }
+  get f() { return this.form.controls; }
 
   onSubmit() {
     this.submitted = true;
 
     // stop here if form is invalid
-    if (this.loginForm.invalid) {
+    if (this.form.invalid) {
       return;
     }
 
     // display form values on success
-    alert('INFO:\n\n' + JSON.stringify(this.loginForm.value, null, 4));
+    // alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.createAccountForm.value, null, 4));
   }
 
 }

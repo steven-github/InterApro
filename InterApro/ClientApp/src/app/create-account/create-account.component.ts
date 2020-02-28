@@ -40,7 +40,7 @@ export class CreateAccountComponent implements OnInit {
     }
 
     // display form values on success
-    // alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.createAccountForm.value, null, 4));
+    alert('INFO:\n\n' + JSON.stringify(this.createAccountForm.value, null, 4));
   }
 
 }

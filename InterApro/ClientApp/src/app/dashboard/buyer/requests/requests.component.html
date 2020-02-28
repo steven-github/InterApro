@@ -1,31 +1,88 @@
-<h3 class="text-info mt-3 mb-3">Pending Requests</h3>
+<div class="row mt-3 mb-3">
+  <div class="col-lg-6">
+    <h3 class="text-info">Pending Requests</h3>
+  </div>
+  <div class="col-lg-6 text-right">
+    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus-circle" aria-hidden="true"></i> Create New Request</button>
+  </div>
+</div>
 <table class="table table-striped">
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
+      <th scope="col">Description</th>
+      <th scope="col">Price</th>
+      <th scope="col">Status</th>
+      <th scope="col">Assignee</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
+      <td>Laptop Lenovo IdeaPad 330-15IKB 15.6'' HD, Intel Core i5-7200U 2.50GHz, 6GB, 2TB, Windows 10 Home, Gris</td>
+      <td>$1500</td>
+      <td><span class="badge badge-pill badge-info">Analysis</span></td>
+      <td>Apro2</td>
     </tr>
     <tr>
       <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
+      <td>Apple MacBook Pro Retina MVVJ2E/A 16", Intel Core i7 2.60GHz, 16GB, 512GB SSD, macOS Catalina, Space Gray (Enero 2020)</td>
+      <td>$3500</td>
+      <td><span class="badge badge-pill badge-info">Analysis</span></td>
+      <td>Apro3</td>
     </tr>
     <tr>
       <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
+      <td>HP Value Receipt Printer II Impresora de Tickets, Térmica Directa, 150mm/s, Serial, USB, Negro</td>
+      <td>$800</td>
+      <td><span class="badge badge-pill badge-info">Analysis</span></td>
+      <td>Apro1</td>
+    </tr>
+    <tr>
+      <th scope="row">4</th>
+      <td>Monitor LG 22MK430H-B LED 21.5'', Full HD, Widescreen, FreeSync, HDMI, Negro</td>
+      <td>$200</td>
+      <td><span class="badge badge-pill badge-info">Analysis</span></td>
+      <td>Boss</td>
+    </tr>
+    <tr>
+      <th scope="row">5</th>
+      <td>Memoria USB SanDisk IXpand Mini, 128GB, USB 3.0/Lightning, Gris/Plata</td>
+      <td>$100</td>
+      <td><span class="badge badge-pill badge-secondary">Pending</span></td>
+      <td>-</td>
     </tr>
   </tbody>
 </table>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New Request</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="create-request-form" class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <input type="number" formControlName="price" class="form-control" id="price" placeholder="Price" [ngClass]="{ 'is-invalid': submitted && f.price.errors }" />
+            <div *ngIf="submitted && f.price.errors" class="invalid-feedback">
+              <div *ngIf="f.price.errors.required">Price is required</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <textarea formControlName="description" class="form-control" id="description" placeholder="Description" [ngClass]="{ 'is-invalid': submitted && f.description.errors }"></textarea>
+            <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+              <div *ngIf="f.description.errors.required">Description is required</div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-info float-right">Create</button>
+          <button type="reset" class="btn btn-secondary float-right mr-2">Clear</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -15,9 +15,13 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { BuyerComponent } from './dashboard/buyer/buyer.component';
 import { BossComponent } from './dashboard/boss/boss.component';
 import { FinancialApproverComponent } from './dashboard/financial-approver/financial-approver.component';
-import { ProfileComponent } from './dashboard/buyer/profile/profile.component';
-import { HistoryComponent } from './dashboard/buyer/history/history.component';
-import { RequestsComponent } from './dashboard/buyer/requests/requests.component';
+import { ProfileBuyerComponent } from './dashboard/buyer/profile/profile.component';
+import { HistoryBuyerComponent } from './dashboard/buyer/history/history.component';
+import { RequestsBuyerComponent } from './dashboard/buyer/requests/requests.component';
+import { ProfileBossComponent } from './dashboard/boss/profile/profile.component';
+import { RequestsBossComponent } from './dashboard/boss/requests/requests.component';
+import { ProfileApproverComponent } from './dashboard/financial-approver/profile/profile.component';
+import { RequestsApproverComponent } from './dashboard/financial-approver/requests/requests.component';
 
 @NgModule({
   declarations: [
@@ -32,9 +36,13 @@ import { RequestsComponent } from './dashboard/buyer/requests/requests.component
     BuyerComponent,
     BossComponent,
     FinancialApproverComponent,
-    ProfileComponent,
-    HistoryComponent,
-    RequestsComponent
+    ProfileBuyerComponent,
+    HistoryBuyerComponent,
+    RequestsBuyerComponent,
+    ProfileBossComponent,
+    RequestsBossComponent,
+    ProfileApproverComponent,
+    RequestsApproverComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

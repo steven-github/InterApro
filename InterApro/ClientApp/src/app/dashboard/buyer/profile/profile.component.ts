@@ -7,15 +7,15 @@ import { MustMatch } from 'src/app/_helpers/must-match.validator';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileBuyerComponent implements OnInit {
 
-  createAccountForm: FormGroup;
+  form: FormGroup;
   submitted = false;
 
   constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    this.createAccountForm = this.formBuilder.group({
+    this.form = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       username: ['', Validators.required],
@@ -29,18 +29,18 @@ export class ProfileComponent implements OnInit {
   }
 
   // convenience getter for easy access to form fields
-  get f() { return this.createAccountForm.controls; }
+  get f() { return this.form.controls; }
 
   onSubmit() {
     this.submitted = true;
 
     // stop here if form is invalid
-    if (this.createAccountForm.invalid) {
+    if (this.form.invalid) {
       return;
     }
 
     // display form values on success
-    // alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.createAccountForm.value, null, 4));
+    // alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.form.value, null, 4));
   }
 
 }
