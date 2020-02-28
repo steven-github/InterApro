@@ -3,11 +3,11 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MustMatch } from 'src/app/_helpers/must-match.validator';
 
 @Component({
-  selector: 'app-profile',
+  selector: 'app-profile-financial-approver',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileApproverComponent implements OnInit {
+export class ProfileFinancialApproverComponent implements OnInit {
 
   form: FormGroup;
   submitted = false;

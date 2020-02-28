@@ -20,8 +20,8 @@ import { HistoryBuyerComponent } from './dashboard/buyer/history/history.compone
 import { RequestsBuyerComponent } from './dashboard/buyer/requests/requests.component';
 import { ProfileBossComponent } from './dashboard/boss/profile/profile.component';
 import { RequestsBossComponent } from './dashboard/boss/requests/requests.component';
-import { ProfileApproverComponent } from './dashboard/financial-approver/profile/profile.component';
-import { RequestsApproverComponent } from './dashboard/financial-approver/requests/requests.component';
+import { ProfileFinancialApproverComponent } from './dashboard/financial-approver/profile/profile.component';
+import { RequestsFinancialApproverComponent } from './dashboard/financial-approver/requests/requests.component';
 
 @NgModule({
   declarations: [
@@ -41,8 +41,8 @@ import { RequestsApproverComponent } from './dashboard/financial-approver/reques
     RequestsBuyerComponent,
     ProfileBossComponent,
     RequestsBossComponent,
-    ProfileApproverComponent,
-    RequestsApproverComponent
+    ProfileFinancialApproverComponent,
+    RequestsFinancialApproverComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
