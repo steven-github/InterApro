@@ -60,15 +60,16 @@
               </div>
             </div>
             <div class="form-group">
-              <select formControlName="department" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.department.errors }">
-                <option value="" disabled>Departament</option>
-                <option value="Opt1">Opt1</option>
-                <option value="Opt2">Opt2</option>
-                <option value="Opt3">Op3</option>
-                <option value="Opt4">Opt4</option>
+              <select formControlName="rol" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.rol.errors }">
+                <option value="" disabled>Rol</option>
+                <option value="0">User</option>
+                <option value="1">Boss</option>
+                <option value="2">Financial Approver 1</option>
+                <option value="3">Financial Approver 2</option>
+                <option value="4">Financial Approver 3</option>
               </select>
-              <div *ngIf="submitted && f.department.errors" class="invalid-feedback">
-                <div *ngIf="f.department.errors.required">Department is required</div>
+              <div *ngIf="submitted && f.rol.errors" class="invalid-feedback">
+                <div *ngIf="f.rol.errors.required">Department is required</div>
               </div>
             </div>
 
@@ -78,5 +79,34 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="row">
+    <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="users">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>FirstName</th>
+          <th>LastName</th>
+          <th>Email</th>
+          <th>Username</th>
+          <th>Rol</th>
+          <th>Password</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users | async" *ngIf="users.lenght == 0">
+          <td>{{ user.id }}</td>
+          <td>{{ user.firstName }}</td>
+          <td>{{ user.lastName }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.rol }}</td>
+          <td>{{ user.password }}</td>
+        </tr>
+        <tr *ngIf="users.lenght > 0">
+          <td colspan="7">No users</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

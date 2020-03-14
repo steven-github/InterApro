@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UserService } from '../_services/user.service';
+import { Observable } from 'rxjs';
+import { User } from '../interfaces';
 
 @Component({
   selector: 'app-log-in',
@@ -11,7 +14,7 @@ export class LogInComponent implements OnInit {
   loginForm: FormGroup;
   submitted = false;
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({

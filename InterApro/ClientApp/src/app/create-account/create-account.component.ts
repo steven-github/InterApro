@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { MustMatch } from '../_helpers/must-match.validator';
+import { UserService } from '../_services/user.service';
+import { Observable } from 'rxjs';
+import { User } from '../interfaces';
 
 @Component({
   selector: 'app-create-account',
@@ -11,18 +14,21 @@ export class CreateAccountComponent implements OnInit {
 
   createAccountForm: FormGroup;
   submitted = false;
+  users: Observable<User[]>;
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(protected _userService: UserService, private formBuilder: FormBuilder) {
+    this.getUsers();
+  }
 
   ngOnInit() {
     this.createAccountForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
+      username: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
-      department: ['', Validators.required],
+      rol: ['', Validators.required],
     }, {
       validator: MustMatch('password', 'confirmPassword')
     });
@@ -39,8 +45,19 @@ export class CreateAccountComponent implements OnInit {
       return;
     }
 
+    this._userService.saveUser(this.createAccountForm);
+
+    setTimeout(() => {
+      this.getUsers();
+    }, 200);
+
     // display form values on success
-    alert('INFO:\n\n' + JSON.stringify(this.createAccountForm.value, null, 4));
+    //alert('INFO:\n\n' + JSON.stringify(this.createAccountForm.value, null, 4));
+  }
+
+  getUsers() {
+    this.users = this._userService.getUsers();
+    console.log('this.users', this.users);
   }
 
 }

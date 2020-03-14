@@ -5,6 +5,10 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+//Tutorial
+using Microsoft.EntityFrameworkCore;
+using InterApro.Models;
+//Tutorial
 
 namespace InterApro
 {
@@ -26,6 +30,12 @@ namespace InterApro
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            //Tutorial
+            var connection = @"Server=MSI\SQLEXPRESS;DataBase=interApro;Trusted_Connection=True;ConnectRetryCount=0";
+            services.AddDbContext<MyDBContext>(options => options.UseSqlServer(connection));
+            //Tutorial
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
