@@ -4,6 +4,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { UserService } from './_services/user.service';
+import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -23,6 +26,7 @@ import { ProfileBossComponent } from './dashboard/boss/profile/profile.component
 import { RequestsBossComponent } from './dashboard/boss/requests/requests.component';
 import { ProfileFinancialApproverComponent } from './dashboard/financial-approver/profile/profile.component';
 import { RequestsFinancialApproverComponent } from './dashboard/financial-approver/requests/requests.component';
+
 
 @NgModule({
   declarations: [
@@ -60,7 +64,10 @@ import { RequestsFinancialApproverComponent } from './dashboard/financial-approv
       { path: 'dashboard/buyer', component: BuyerComponent },
       { path: 'dashboard/boss', component: BossComponent },
       { path: 'dashboard/financial-approver', component: FinancialApproverComponent },
-    ])
+    ]),
+    CommonModule,
+    BrowserAnimationsModule, // required animations module
+    ToastrModule.forRoot() // ToastrModule added
   ],
   providers: [UserService],
   bootstrap: [AppComponent]

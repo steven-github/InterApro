@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from '../_services/user.service';
 import { Observable } from 'rxjs';
 import { User } from '../interfaces';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-log-in',
@@ -13,18 +14,15 @@ export class LogInComponent implements OnInit {
 
   loginForm: FormGroup;
   submitted = false;
+  loading = false;
+  user: User[];
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(protected _userService: UserService, private formBuilder: FormBuilder, private toastr: ToastrService) {}
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
       username: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required],
-      department: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
@@ -36,11 +34,22 @@ export class LogInComponent implements OnInit {
 
     // stop here if form is invalid
     if (this.loginForm.invalid) {
+      //this.loading = false;
       return;
     }
 
+    this.loading = true;
+    this.toastr.success('Hello world!', 'Toastr fun!');
+    this.toastr.error('everything is broken', 'Major Error', {
+      timeOut: 3000
+    });
+
+    this._userService.loginUser(this.loginForm).subscribe(results => {
+      console.log('results', results);
+    }, error => console.error('error', error));
+
     // display form values on success
-    alert('INFO:\n\n' + JSON.stringify(this.loginForm.value, null, 4));
+    //alert('INFO:\n\n' + JSON.stringify(this.loginForm.value, null, 4));
   }
 
 }

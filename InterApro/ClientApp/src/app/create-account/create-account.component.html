@@ -51,7 +51,7 @@
                 </div>
                 <div class="col-lg-6">
                   <input type="password" formControlName="confirmPassword" class="form-control" id="confirmPassword" placeholder="Confirm Password"
-                    [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
+                         [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
                   <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
                     <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
                     <div *ngIf="f.confirmPassword.errors.mustMatch">Passwords must match</div>
@@ -81,7 +81,7 @@
     </div>
   </div>
   <div class="row">
-    <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="users">
+    <table class='table table-striped' aria-labelledby="tableLabel">
       <thead>
         <tr>
           <th>Id</th>
@@ -94,18 +94,23 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of users | async" *ngIf="users.lenght == 0">
-          <td>{{ user.id }}</td>
-          <td>{{ user.firstName }}</td>
-          <td>{{ user.lastName }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.username }}</td>
-          <td>{{ user.rol }}</td>
-          <td>{{ user.password }}</td>
-        </tr>
-        <tr *ngIf="users.lenght > 0">
-          <td colspan="7">No users</td>
-        </tr>
+        <ng-container *ngIf="users && users.length > 0">
+          <tr *ngFor="let user of users; let i = index">
+
+            <td>{{ user.id }}</td>
+            <td>{{ user.firstName }}</td>
+            <td>{{ user.lastName }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.rol }}</td>
+            <td>{{ user.password }}</td>
+          </tr>
+        </ng-container>
+        <ng-container *ngIf="users && users.length == 0">
+          <tr>
+            <td colspan="7" class="text-center">No users</td>
+          </tr>
+        </ng-container>
       </tbody>
     </table>
   </div>

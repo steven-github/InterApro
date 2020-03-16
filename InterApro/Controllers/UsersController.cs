@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using InterApro.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace InterApro.Controllers
 {
@@ -38,9 +39,9 @@ namespace InterApro.Controllers
             return list;
         }
 
-        // POST: api/Users
-        [HttpPost]
-        public Response Post([FromBody] UserViewModel model)
+        // POST: api/users/create
+        [HttpPost("create")]
+        public Response Create([FromBody] UserViewModel model)
         {
             Response response = new Response();
 
@@ -64,6 +65,67 @@ namespace InterApro.Controllers
             }
 
             return response;
+        }
+
+        // POST: api/users/login
+        [HttpPost("login")]
+        public Response Login([FromBody] UserViewModel model)
+        {
+            Response response = new Response();
+
+            try
+            {
+                List<UserViewModel> user = (from d in db.User
+                                            where d.Username == model.Username && d.Password == model.Password
+                                            orderby d.Id descending
+                                            select new UserViewModel
+                                            {
+                                                Id = d.Id,
+                                                FirstName = d.FirstName,
+                                                LastName = d.LastName,
+                                                Email = d.Email,
+                                                Username = d.Username,
+                                                Password = d.Password,
+                                                Rol = d.Rol
+                                            }).ToList();
+                if (user == null)
+                {
+                    response.Success = 0;
+                    response.Message = "User doesn't exists!";
+                }
+                else
+                {
+                    if (user.Count() == 0)
+                    {
+                        response.Success = 0;
+                        response.Message = "Incorrect credentials! Please check your username or password!";
+                    }
+                    else
+                    {
+                        response.Success = 1;
+                        response.Message = "Access Granted!";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = 0;
+                response.Message = ex.Message;
+            }
+
+            return response;
+        }
+        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] salt)
+        {
+            using (var hmac = new System.Security.Cryptography.HMACSHA512(salt))
+            {
+                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                for (int i = 0; i < computedHash.Length; i++)
+                {
+                    if (computedHash[i] != passwordHash[i]) return false;
+                }
+            }
+            return true;
         }
     }
 

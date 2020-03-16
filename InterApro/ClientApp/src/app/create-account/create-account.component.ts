@@ -14,7 +14,8 @@ export class CreateAccountComponent implements OnInit {
 
   createAccountForm: FormGroup;
   submitted = false;
-  users: Observable<User[]>;
+  //users: Observable<User[]>;
+  users: User[];
 
   constructor(protected _userService: UserService, private formBuilder: FormBuilder) {
     this.getUsers();
@@ -56,7 +57,8 @@ export class CreateAccountComponent implements OnInit {
   }
 
   getUsers() {
-    this.users = this._userService.getUsers();
+    //this.users = this._userService.getUsers();
+    this._userService.getUsers().subscribe(res => this.users = res);
     console.log('this.users', this.users);
   }
 

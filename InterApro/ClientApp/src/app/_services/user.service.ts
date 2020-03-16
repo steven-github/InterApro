@@ -40,4 +40,17 @@ export class UserService {
       console.log('result', result);
     }, error => console.error('error', error));
   }
+
+  loginUser(form): Observable<Response> {
+    //this.http.post<Response>(this.baseUrl + 'api/users/login', {
+    //  'Username': form.controls.username.value,
+    //  'Password': form.controls.password.value
+    //}, httpOptions).subscribe(result => {
+    //  console.log('result', result);
+    //}, error => console.error('error', error));
+    return this.http.post<Response>(this.baseUrl + 'api/users/login', {
+      'Username': form.controls.username.value,
+      'Password': form.controls.password.value
+    }, httpOptions);
+  }
 }
