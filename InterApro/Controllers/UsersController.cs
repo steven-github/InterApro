@@ -75,17 +75,15 @@ namespace InterApro.Controllers
 
             try
             {
-                List<UserViewModel> user = (from d in db.User
+                List<UserViewModelLogged> user = (from d in db.User
                                             where d.Username == model.Username && d.Password == model.Password
                                             orderby d.Id descending
-                                            select new UserViewModel
+                                            select new UserViewModelLogged
                                             {
-                                                Id = d.Id,
                                                 FirstName = d.FirstName,
                                                 LastName = d.LastName,
                                                 Email = d.Email,
                                                 Username = d.Username,
-                                                Password = d.Password,
                                                 Rol = d.Rol
                                             }).ToList();
                 if (user == null)
@@ -98,12 +96,13 @@ namespace InterApro.Controllers
                     if (user.Count() == 0)
                     {
                         response.Success = 0;
-                        response.Message = "Incorrect credentials! Please check your username or password!";
+                        response.Message = "Wrong credentials!";
                     }
                     else
                     {
                         response.Success = 1;
                         response.Message = "Access Granted!";
+                        response.User = user;
                     }
                 }
             }
@@ -133,5 +132,6 @@ namespace InterApro.Controllers
     {
         public int Success { get; set; }
         public string Message { get; set; }
+        public List<UserViewModelLogged> User { get; set; }
     }
 }

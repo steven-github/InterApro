@@ -17,7 +17,7 @@ export class CreateAccountComponent implements OnInit {
   //users: Observable<User[]>;
   users: User[];
 
-  constructor(protected _userService: UserService, private formBuilder: FormBuilder) {
+  constructor(private _userService: UserService, private formBuilder: FormBuilder) {
     this.getUsers();
   }
 
@@ -46,7 +46,7 @@ export class CreateAccountComponent implements OnInit {
       return;
     }
 
-    this._userService.saveUser(this.createAccountForm);
+    this._userService.register(this.createAccountForm);
 
     setTimeout(() => {
       this.getUsers();
@@ -58,8 +58,9 @@ export class CreateAccountComponent implements OnInit {
 
   getUsers() {
     //this.users = this._userService.getUsers();
-    this._userService.getUsers().subscribe(res => this.users = res);
-    console.log('this.users', this.users);
+    this._userService.getUsers().subscribe(res => {
+      this.users = res;
+    });
   }
 
 }

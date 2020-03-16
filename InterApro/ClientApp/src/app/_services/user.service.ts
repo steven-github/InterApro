@@ -18,17 +18,19 @@ const httpOptions = {
 export class UserService {
 
   baseUrl: string;
+  currentUser: any;
 
   constructor(protected http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     this.baseUrl = baseUrl;
+    this.currentUser = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : '';
+    console.log('UserService', this.currentUser);
   }
 
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>(this.baseUrl + 'api/users');
   }
 
-  saveUser(form) {
-    console.log('form', form.controls);
+  register(form) {
     this.http.post<Response>(this.baseUrl + 'api/users', {
       'FirstName': form.controls.firstName.value,
       'LastName': form.controls.lastName.value,
@@ -41,16 +43,16 @@ export class UserService {
     }, error => console.error('error', error));
   }
 
-  loginUser(form): Observable<Response> {
-    //this.http.post<Response>(this.baseUrl + 'api/users/login', {
-    //  'Username': form.controls.username.value,
-    //  'Password': form.controls.password.value
-    //}, httpOptions).subscribe(result => {
-    //  console.log('result', result);
-    //}, error => console.error('error', error));
+  login(form): Observable<Response> {
     return this.http.post<Response>(this.baseUrl + 'api/users/login', {
       'Username': form.controls.username.value,
       'Password': form.controls.password.value
     }, httpOptions);
+  }
+
+  logout() {
+    // remove user data from local storage for log out
+    localStorage.removeItem('currentUser');
+    this.currentUser = null;
   }
 }
