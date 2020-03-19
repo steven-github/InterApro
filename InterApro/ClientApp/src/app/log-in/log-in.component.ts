@@ -58,7 +58,9 @@ export class LogInComponent implements OnInit {
           timeOut: 1500,
           progressBar: true
         }).onHidden.subscribe(() => {
-          localStorage.setItem('currentUser', JSON.stringify(results['user'][0]));
+          let r = results['user'][0];
+          r.isLogged = true;
+          localStorage.setItem('currentUser', JSON.stringify(r));
           this._userService.currentUser = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : '';
           this._router.navigate(['/create-account']);
           console.log('4', this._userService.currentUser);

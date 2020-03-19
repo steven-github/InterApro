@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { UserService } from './_services/user.service';
+import { AuthGuardService } from './_services/auth-guard.service';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
@@ -55,12 +56,12 @@ import { RequestsFinancialApproverComponent } from './dashboard/financial-approv
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', component: LogInComponent, pathMatch: 'full' },
+      { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'log-in', component: LogInComponent },
       { path: 'forgot-password', component: ForgotPasswordComponent },
-      { path: 'create-account', component: CreateAccountComponent },
+      { path: 'create-account', component: CreateAccountComponent, canActivate : [AuthGuardService] },
       { path: 'dashboard/buyer', component: BuyerComponent },
       { path: 'dashboard/boss', component: BossComponent },
       { path: 'dashboard/financial-approver', component: FinancialApproverComponent },
@@ -69,7 +70,7 @@ import { RequestsFinancialApproverComponent } from './dashboard/financial-approv
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot() // ToastrModule added
   ],
-  providers: [UserService],
+  providers: [UserService, AuthGuardService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

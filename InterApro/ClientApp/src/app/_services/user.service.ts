@@ -30,6 +30,26 @@ export class UserService {
     return this.http.get<User[]>(this.baseUrl + 'api/users');
   }
 
+  isUserLoggedIn(): boolean {
+    const currentUser = localStorage.getItem('currentUser');
+    console.log('currentUser', currentUser);
+    if (currentUser) {
+      return true;
+    }
+    return false;
+  }
+
+  isAdmin(): boolean {
+    const currentUser = localStorage.getItem('currentUser');
+    console.log('currentUser', currentUser);
+    if (currentUser['isLogged'] && currentUser['rol'] == -1) {
+      return true;
+    }
+    return false;
+  }
+
+
+
   register(form) {
     this.http.post<Response>(this.baseUrl + 'api/users', {
       'FirstName': form.controls.firstName.value,
