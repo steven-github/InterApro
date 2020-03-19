@@ -25,14 +25,16 @@
           <li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="_userService.currentUser">
             <a class="nav-link text-dark" [routerLink]="['/create-account']">Create Account</a>
           </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="!_userService.currentUser">
+          <!--<li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="!_userService.currentUser">
             <a class="nav-link text-dark" [routerLink]="['/forgot-password']">Forgot Password</a>
-          </li>
+          </li>-->
           <li class="nav-item dropdown" *ngIf="_userService.currentUser">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Dashboard
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="nav-link text-dark" [routerLink]="['/dashboard/admin']">Admin</a>
+              <div class="dropdown-divider"></div>
               <a class="nav-link text-dark" [routerLink]="['/dashboard/buyer']">Buyer</a>
               <div class="dropdown-divider"></div>
               <a class="nav-link text-dark" [routerLink]="['/dashboard/boss']">Boss</a>
