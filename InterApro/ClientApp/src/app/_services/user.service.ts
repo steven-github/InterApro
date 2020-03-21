@@ -50,17 +50,28 @@ export class UserService {
 
 
 
-  register(form) {
-    this.http.post<Response>(this.baseUrl + 'api/users', {
+  //register(form) {
+  //  this.http.post<Response>(this.baseUrl + 'api/users', {
+  //    'FirstName': form.controls.firstName.value,
+  //    'LastName': form.controls.lastName.value,
+  //    'Email': form.controls.email.value,
+  //    'Username': form.controls.username.value,
+  //    'Password': form.controls.password.value,
+  //    'Rol': form.controls.rol.value
+  //  }, httpOptions).subscribe(result => {
+  //    console.log('result', result);
+  //  }, error => console.error('error', error));
+  //}
+
+  create(form): Observable<Response> {
+    return this.http.post<Response>(this.baseUrl + 'api/users/create', {
       'FirstName': form.controls.firstName.value,
       'LastName': form.controls.lastName.value,
       'Email': form.controls.email.value,
       'Username': form.controls.username.value,
       'Password': form.controls.password.value,
       'Rol': form.controls.rol.value
-    }, httpOptions).subscribe(result => {
-      console.log('result', result);
-    }, error => console.error('error', error));
+    }, httpOptions);
   }
 
   login(form): Observable<Response> {

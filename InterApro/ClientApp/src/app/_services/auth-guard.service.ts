@@ -15,7 +15,7 @@ export class AuthGuardService implements CanActivate {
     state: RouterStateSnapshot): boolean | UrlTree {
 
     if (!this._userService.isUserLoggedIn()) {
-      this.toastr.error('You are not allowed to view ' + route.url + ' page. You need to login first.', 'Error', {
+      this.toastr.error('You are not allowed to view access this page. You need to login first.', 'Error', {
         timeOut: 5000,
         progressBar: true
       }).onHidden.subscribe(() => {});

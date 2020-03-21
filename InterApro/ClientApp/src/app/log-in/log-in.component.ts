@@ -59,10 +59,30 @@ export class LogInComponent implements OnInit {
           progressBar: true
         }).onHidden.subscribe(() => {
           let r = results['user'][0];
+          console.log('r', r);
           r.isLogged = true;
           localStorage.setItem('currentUser', JSON.stringify(r));
           this._userService.currentUser = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : '';
-          this._router.navigate(['/create-account']);
+          switch (r.rol) {
+            case "-1":
+              this._router.navigate(['/dashboard/admin']);
+              break;
+            case "0":
+              this._router.navigate(['/dashboard/buyer']);
+              break;
+            case "1":
+              this._router.navigate(['/dashboard/boss']);
+              break;
+            case "2":
+              this._router.navigate(['/dashboard/financial-approver']);
+              break;
+            case "3":
+              this._router.navigate(['/dashboard/financial-approver']);
+              break;
+            case "4":
+              this._router.navigate(['/dashboard/financial-approver']);
+              break;
+          }          
           console.log('4', this._userService.currentUser);
           this.submitted = false;
           this.loginForm.reset();

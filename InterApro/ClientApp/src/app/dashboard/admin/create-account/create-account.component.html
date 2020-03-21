@@ -1,3 +1,8 @@
+<div class="row loading" *ngIf="loading">
+  <div class="spinner-border text-info align-self-center" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
 <form priceclass="form" [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
   <div class="form-group">
     <div class="row">
@@ -34,7 +39,7 @@
         <input type="password" formControlName="password" class="form-control" id="password" placeholder="Password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
         <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
           <div *ngIf="f.password.errors.required">Password is required</div>
-          <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+          <div *ngIf="f.password.errors.minlength">Password must be at least 5 characters</div>
         </div>
       </div>
       <div class="col-lg-6">
@@ -50,7 +55,7 @@
   <div class="form-group">
     <select formControlName="rol" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.rol.errors }">
       <option value="" disabled>Rol</option>
-      <option value="0">User</option>
+      <option value="0">Buyer</option>
       <option value="1">Boss</option>
       <option value="2">Financial Approver 1</option>
       <option value="3">Financial Approver 2</option>
@@ -64,3 +69,5 @@
   <button type="submit" class="btn btn-info">Register</button>
 
 </form>
+
+{{test}}

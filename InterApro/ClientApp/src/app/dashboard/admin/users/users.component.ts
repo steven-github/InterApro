@@ -11,14 +11,19 @@ declare var $: any;
 export class AdminUsersComponent implements OnInit {
 
   users: User[];
+  status = [
+    { id: -1, name: 'Active' },
+    { id: 0, name: 'Inactive' }
+  ];
   rol = [
     { id: -1, name: 'Admin' },
-    { id: 0, name: 'User' },
+    { id: 0, name: 'Buyer' },
     { id: 1, name: 'Boss' },
     { id: 2, name: 'Financial Approver 1' },
     { id: 3, name: 'Financial Approver 2' },
     { id: 4, name: 'Financial Approver 3' }
   ];
+  test: boolean = true;
 
   constructor(private _userService: UserService) {
     this.getUsers();
@@ -31,6 +36,7 @@ export class AdminUsersComponent implements OnInit {
   getUsers() {
     //this.users = this._userService.getUsers();
     this._userService.getUsers().subscribe(res => {
+      console.log('res', res);
       this.users = res;
     });
   }

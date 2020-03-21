@@ -19,11 +19,11 @@
   <li class="nav-item" [routerLinkActive]="['link-active']">
     <a class="nav-link text-dark" [routerLink]="['/fetch-data']">Fetch data</a>
   </li> -->
-          <li class="nav-item" [routerLinkActive]="['link-active']" routerLinkActive="active" *ngIf="!_userService.currentUser">
+          <li class="nav-item" *ngIf="!_userService.currentUser">
             <a class="nav-link text-dark" [routerLink]="['/log-in']" routerLinkActive="active">LogIn</a>
           </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']" routerLinkActive="active">
-            <a class="nav-link text-dark" [routerLink]="['/create-account']" routerLinkActive="active">Create Account</a>
+          <li class="nav-item">
+            <a class="nav-link text-dark" [routerLink]="['/dashboard/admin']" routerLinkActive="active">Admin</a>
           </li>
           <!--<li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="!_userService.currentUser">
             <a class="nav-link text-dark" [routerLink]="['/forgot-password']">Forgot Password</a>
