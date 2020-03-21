@@ -1,0 +1,5 @@
+.badge {
+  &.badge-success, &.badge-danger {
+    min-width: 60px;
+  }
+}

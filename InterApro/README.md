@@ -14,16 +14,25 @@ Microsoft.EntityFrameworkCore.SqlServer
 Microsoft.EntityFrameworkCore.Tools
 ```
 
-## 2. Add Migrations and Update DataBase
+## 2. Add Migrations (OMMIT THIS AREA)
 
 Go to Tools > Nuget Package Manager > Package Manager Console [EXAMPLE](https://i.imgur.com/iaVTaC9.png) and run following commands:
 
 [Add-Migration InitialCreate](https://i.imgur.com/6JZXzqQ.png)
 
+```bash
+Add-Migration InitialCreate
+Add-Migration IncludingUserRol
+Add-Migration IncludingUserStatus
+```
+
+## 2. Add Migrations and Update DataBase
+
+Go to Tools > Nuget Package Manager > Package Manager Console [EXAMPLE](https://i.imgur.com/iaVTaC9.png) and run following commands:
+
 [Update-Database](https://i.imgur.com/TSBwUPv.png)
 
 ```bash
-Add-Migration InitialCreate
 Update-Database
 ```
 

@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { MustMatch } from '../_helpers/must-match.validator';
-import { UserService } from '../_services/user.service';
+import { MustMatch } from '../../../_helpers/must-match.validator';
+import { UserService } from '../../../_services/user.service';
 import { Observable } from 'rxjs';
-import { User } from '../interfaces';
+import { User } from '../../../interfaces';
 
 @Component({
-  selector: 'app-create-account',
+  selector: 'app-admin-create-account',
   templateUrl: './create-account.component.html',
   styleUrls: ['./create-account.component.scss']
 })
-export class CreateAccountComponent implements OnInit {
+export class AdminCreateAccountComponent implements OnInit {
 
   createAccountForm: FormGroup;
   submitted = false;

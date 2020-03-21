@@ -34,6 +34,7 @@ namespace InterApro.Controllers
                                             Email = d.Email,
                                             Username = d.Username,
                                             Password = d.Password,
+                                            Status = d.Status,
                                             Rol = d.Rol
                                         }).ToList();
             return list;
@@ -84,6 +85,7 @@ namespace InterApro.Controllers
                                                 LastName = d.LastName,
                                                 Email = d.Email,
                                                 Username = d.Username,
+                                                Status = d.Status,
                                                 Rol = d.Rol
                                             }).ToList();
                 if (user == null)

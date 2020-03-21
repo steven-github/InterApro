@@ -14,7 +14,6 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
-import { CreateAccountComponent } from './create-account/create-account.component';
 import { LogInComponent } from './log-in/log-in.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { BuyerComponent } from './dashboard/buyer/buyer.component';
@@ -27,6 +26,9 @@ import { ProfileBossComponent } from './dashboard/boss/profile/profile.component
 import { RequestsBossComponent } from './dashboard/boss/requests/requests.component';
 import { ProfileFinancialApproverComponent } from './dashboard/financial-approver/profile/profile.component';
 import { RequestsFinancialApproverComponent } from './dashboard/financial-approver/requests/requests.component';
+import { AdminComponent } from './dashboard/admin/admin.component';
+import { AdminUsersComponent } from './dashboard/admin/users/users.component';
+import { AdminCreateAccountComponent } from './dashboard/admin/create-account/create-account.component';
 
 
 @NgModule({
@@ -36,7 +38,6 @@ import { RequestsFinancialApproverComponent } from './dashboard/financial-approv
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
-    CreateAccountComponent,
     LogInComponent,
     ForgotPasswordComponent,
     BuyerComponent,
@@ -48,7 +49,10 @@ import { RequestsFinancialApproverComponent } from './dashboard/financial-approv
     ProfileBossComponent,
     RequestsBossComponent,
     ProfileFinancialApproverComponent,
-    RequestsFinancialApproverComponent
+    RequestsFinancialApproverComponent,
+    AdminComponent,
+    AdminUsersComponent,
+    AdminCreateAccountComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -61,7 +65,8 @@ import { RequestsFinancialApproverComponent } from './dashboard/financial-approv
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'log-in', component: LogInComponent },
       { path: 'forgot-password', component: ForgotPasswordComponent },
-      { path: 'create-account', component: CreateAccountComponent, canActivate : [AuthGuardService] },
+      { path: 'create-account', component: AdminCreateAccountComponent, canActivate: [AuthGuardService] },
+      { path: 'dashboard/admin', component: AdminComponent },
       { path: 'dashboard/buyer', component: BuyerComponent },
       { path: 'dashboard/boss', component: BossComponent },
       { path: 'dashboard/financial-approver', component: FinancialApproverComponent },
