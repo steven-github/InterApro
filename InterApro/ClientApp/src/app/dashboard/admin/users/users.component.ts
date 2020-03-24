@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, EventEmitter } from '@angular/core';
 import { UserService } from '../../../_services/user.service';
 import { User } from '../../../interfaces';
 declare var $: any;
@@ -23,7 +23,8 @@ export class AdminUsersComponent implements OnInit {
     { id: 3, name: 'Financial Approver 2' },
     { id: 4, name: 'Financial Approver 3' }
   ];
-  test: boolean = true;
+  // test: boolean = true;
+  // @ViewChild("createUserModal") createUserModal: ElementRef;
 
   constructor(private _userService: UserService) {
     this.getUsers();
@@ -33,19 +34,35 @@ export class AdminUsersComponent implements OnInit {
     $('[data-toggle="tooltip"]').tooltip();
   }
 
-  getUsers() {
+  getUsers(): void {
     //this.users = this._userService.getUsers();
     this._userService.getUsers().subscribe(res => {
-      console.log('res', res);
+      console.log('getUsers', res);
       this.users = res;
     });
   }
 
-  editUser(id) {
+  closeModal(event): void {
+    $('#createUser').modal('hide');
+    console.log('event', event);
+    this.getUsers();
+  //   setTimeout (() => {
+  //     console.log("Hello from setTimeout");
+  //     this.getUsers();
+  //  }, 1000);
+  }
+
+  editUser(id: number): void {
     console.log('id', id);
   }
 
-  getRolName(id): string {
+  deleteUser(id: number): void {
+    this._userService.delete(id).subscribe(res => {
+      console.log('delete', res);
+    });
+  }
+
+  getRolName(id: number): string {
     let rol = this.rol.find(obj => obj.id == id);
     return rol.name;
   }

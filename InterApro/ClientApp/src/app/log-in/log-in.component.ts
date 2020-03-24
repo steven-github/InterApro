@@ -17,12 +17,8 @@ export class LogInComponent implements OnInit {
   submitted = false;
   loading = false;
   user: User[];
-  //currentUser: any;
 
-  constructor(private _userService: UserService, private formBuilder: FormBuilder, private toastr: ToastrService, private _router: Router) {
-    //this.currentUser = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : '';
-    //console.log('asd', this.currentUser);
-  }
+  constructor(private _userService: UserService, private formBuilder: FormBuilder, private toastr: ToastrService, private _router: Router) {}
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
@@ -45,7 +41,6 @@ export class LogInComponent implements OnInit {
     this.loading = true;
 
     this._userService.login(this.loginForm).subscribe(results => {
-      console.log('results', results);
       if (results['success'] == 0) {
         this.toastr.error(results['message'], 'Error', {
           timeOut: 1500,
@@ -58,42 +53,35 @@ export class LogInComponent implements OnInit {
           timeOut: 1500,
           progressBar: true
         }).onHidden.subscribe(() => {
-          let r = results['user'][0];
-          console.log('r', r);
-          r.isLogged = true;
-          localStorage.setItem('currentUser', JSON.stringify(r));
+          localStorage.setItem('currentUser', JSON.stringify(results));
           this._userService.currentUser = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : '';
-          switch (r.rol) {
-            case "-1":
+          switch (results['rol']) {
+            case -1:
               this._router.navigate(['/dashboard/admin']);
               break;
-            case "0":
+            case 0:
               this._router.navigate(['/dashboard/buyer']);
               break;
-            case "1":
+            case 1:
               this._router.navigate(['/dashboard/boss']);
               break;
-            case "2":
+            default:
               this._router.navigate(['/dashboard/financial-approver']);
-              break;
-            case "3":
-              this._router.navigate(['/dashboard/financial-approver']);
-              break;
-            case "4":
-              this._router.navigate(['/dashboard/financial-approver']);
-              break;
-          }          
-          console.log('4', this._userService.currentUser);
+          }
           this.submitted = false;
           this.loginForm.reset();
           this.loading = false;
           return false;
         });
       }
-    }, error => console.error('error', error));
-
-    // display form values on success
-    //alert('INFO:\n\n' + JSON.stringify(this.loginForm.value, null, 4));
+    }, error => {
+        this.toastr.error(error.error['message'], 'Error', {
+          timeOut: 1500,
+          progressBar: true
+        }).onHidden.subscribe(() => {
+          this.loading = false;
+        });
+    });
   }
 
 }

@@ -11,21 +11,15 @@ export class AuthGuardService implements CanActivate {
 
   }
 
-  canActivate(route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): boolean | UrlTree {
-
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree {
     if (!this._userService.isUserLoggedIn()) {
-      this.toastr.error('You are not allowed to view access this page. You need to login first.', 'Error', {
+      this.toastr.error('You are not allowed to access this page. Go and login first.', 'Error', {
         timeOut: 5000,
         progressBar: true
       }).onHidden.subscribe(() => {});
-
       //this._router.navigate(["log-in"], { queryParams: { retUrl: route.url } });
       this._router.navigate(["log-in"]);
       return false;
-
-      //var urlTree = this.router.createUrlTree(['login']);
-      //return urlTree;
     }
 
     return true;

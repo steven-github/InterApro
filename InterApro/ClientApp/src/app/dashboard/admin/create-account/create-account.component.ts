@@ -13,8 +13,10 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class AdminCreateAccountComponent implements OnInit {
 
-  @Input() test: boolean;
-  @Output() testChange = new EventEmitter<boolean>();
+  // @Input() test: boolean;
+  // @Output() testChange = new EventEmitter<boolean>();
+  // @Input() closeModal: any;
+  @Output() closeModal = new EventEmitter<number>();
 
   createAccountForm: FormGroup;
   submitted = false;
@@ -32,6 +34,7 @@ export class AdminCreateAccountComponent implements OnInit {
       username: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(5)]],
       confirmPassword: ['', Validators.required],
+      status: [],
       rol: ['', Validators.required],
     }, {
       validator: MustMatch('password', 'confirmPassword')
@@ -43,37 +46,36 @@ export class AdminCreateAccountComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
-    this.testChange.emit(!this.test);
+    // this.testChange.emit(!this.test);
 
     // stop here if form is invalid
     if (this.createAccountForm.invalid) {
+      console.log('this.createAccountForm', this.createAccountForm);
       return;
     }
 
-    //this._userService.create(this.createAccountForm).subscribe(results => {
-    //  console.log('results', results);
-    //  if (results['success'] == 0) {
-    //    this.toastr.error(results['message'], 'Error', {
-    //      timeOut: 1500,
-    //      progressBar: true
-    //    }).onHidden.subscribe(() => {
-    //      this.loading = false;
-    //    });
-    //  } else {
-    //    this.toastr.success(results['message'], 'Success', {
-    //      timeOut: 1500,
-    //      progressBar: true
-    //    }).onHidden.subscribe(() => {
-    //      this.submitted = false;
-    //      this.createAccountForm.reset();
-    //      this.loading = false;
-    //      return false;
-    //    });
-    //  }
-    //}, error => console.error('error', error));
-
-    // display form values on success
-    //alert('INFO:\n\n' + JSON.stringify(this.createAccountForm.value, null, 4));
+    this._userService.create(this.createAccountForm).subscribe(results => {
+      console.log('results', results);
+      if (results['success'] == 0) {
+        this.toastr.error(results['message'], 'Error', {
+          timeOut: 1500,
+          progressBar: true
+        }).onHidden.subscribe(() => {
+          this.loading = false;
+        });
+      } else {
+        this.toastr.success(results['message'], 'Success', {
+          timeOut: 1500,
+          progressBar: true
+        }).onHidden.subscribe(() => {
+          this.submitted = false;
+          this.createAccountForm.reset();
+          this.loading = false;
+          this.closeModal.emit(1);
+          return false;
+        });
+      }
+    }, error => console.error('error', error));
   }
 
 }

@@ -29,6 +29,8 @@ import { RequestsFinancialApproverComponent } from './dashboard/financial-approv
 import { AdminComponent } from './dashboard/admin/admin.component';
 import { AdminUsersComponent } from './dashboard/admin/users/users.component';
 import { AdminCreateAccountComponent } from './dashboard/admin/create-account/create-account.component';
+import { ErrorInterceptor } from './_helpers/error.interceptor';
+import { BasicAuthInterceptor } from './_helpers/basic-auth.interceptor';
 
 
 @NgModule({
@@ -75,7 +77,11 @@ import { AdminCreateAccountComponent } from './dashboard/admin/create-account/cr
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot() // ToastrModule added
   ],
-  providers: [UserService, AuthGuardService],
+  providers: [
+    UserService, 
+    AuthGuardService, 
+    { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

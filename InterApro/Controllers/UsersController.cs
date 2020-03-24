@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using InterApro.Models;
 using InterApro.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,113 +21,78 @@ namespace InterApro.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public IEnumerable<UserViewModel> Get()
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            //List<Models.User> list = db.User.ToList();
-            //return Json(list);
-            List<UserViewModel> list = (from d in db.User
-                                        orderby d.Id descending
-                                        select new UserViewModel
-                                        {
-                                            Id = d.Id,
-                                            FirstName = d.FirstName,
-                                            LastName = d.LastName,
-                                            Email = d.Email,
-                                            Username = d.Username,
-                                            Password = d.Password,
-                                            Status = d.Status,
-                                            Rol = d.Rol
-                                        }).ToList();
-            return list;
+            return await db.User.ToListAsync();
         }
 
-        // POST: api/users/create
-        [HttpPost("create")]
-        public Response Create([FromBody] UserViewModel model)
+        // GET: api/Users1/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<User>> GetUser(int id)
         {
-            Response response = new Response();
+            var user = await db.User.FindAsync(id);
 
-            try
+            if (user == null)
             {
-                Models.User newUser = new Models.User();
-                newUser.FirstName = model.FirstName;
-                newUser.LastName = model.LastName;
-                newUser.Email = model.Email;
-                newUser.Username = model.Username;
-                newUser.Password = model.Password;
-                newUser.Rol = model.Rol;
-                db.User.Add(newUser);
-                db.SaveChanges();
-                response.Success = 1;
-            }
-            catch (Exception ex)
-            {
-                response.Success = 0;
-                response.Message = ex.Message;
+                return NotFound();
             }
 
-            return response;
+            return user;
+        }
+
+        // POST: api/Users
+        [HttpPost("create")]
+        public async Task<ActionResult<User>> PostCreate(User user)
+        {
+            db.User.Add(user);
+            await db.SaveChangesAsync();
+
+            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+        }
+
+        // DELETE: api/Users/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<User>> Delete(int id)
+        {
+            var user = await db.User.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            db.User.Remove(user);
+            await db.SaveChangesAsync();
+
+            return user;
         }
 
         // POST: api/users/login
         [HttpPost("login")]
-        public Response Login([FromBody] UserViewModel model)
+        public async Task<ActionResult<UserViewModelLogged>> PostLogin(User user)
         {
-            Response response = new Response();
+            var u = await db.User.Where(u => u.Username == user.Username && u.Password == user.Password).ToListAsync();
 
-            try
+            if (u == null)
             {
-                List<UserViewModelLogged> user = (from d in db.User
-                                            where d.Username == model.Username && d.Password == model.Password
-                                            orderby d.Id descending
-                                            select new UserViewModelLogged
-                                            {
-                                                FirstName = d.FirstName,
-                                                LastName = d.LastName,
-                                                Email = d.Email,
-                                                Username = d.Username,
-                                                Status = d.Status,
-                                                Rol = d.Rol
-                                            }).ToList();
-                if (user == null)
-                {
-                    response.Success = 0;
-                    response.Message = "User doesn't exists!";
-                }
-                else
-                {
-                    if (user.Count() == 0)
-                    {
-                        response.Success = 0;
-                        response.Message = "Wrong credentials!";
-                    }
-                    else
-                    {
-                        response.Success = 1;
-                        response.Message = "Access Granted!";
-                        response.User = user;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                response.Success = 0;
-                response.Message = ex.Message;
+                return NotFound(new { success = 0, message = "Not Found" });
             }
 
-            return response;
-        }
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] salt)
-        {
-            using (var hmac = new System.Security.Cryptography.HMACSHA512(salt))
+            if (u.Count() == 0)
             {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                for (int i = 0; i < computedHash.Length; i++)
-                {
-                    if (computedHash[i] != passwordHash[i]) return false;
-                }
+                return Unauthorized(new { success = 0, message = "Unauthorized Account" });
             }
-            return true;
+
+            return Ok(new { 
+                success = 1, 
+                message = "Access Granted", 
+                firstname = u[0].FirstName,
+                lastname = u[0].LastName,
+                email = u[0].Email,
+                username = u[0].Username,
+                rol = Int32.Parse(u[0].Rol),
+                status = Int32.Parse(u[0].Status),
+                isLogged = true
+            });;
         }
     }
 
