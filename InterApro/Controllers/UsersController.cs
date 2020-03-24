@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using InterApro.Models;
 using InterApro.Models.ViewModels;
@@ -23,7 +25,25 @@ namespace InterApro.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return await db.User.ToListAsync();
+            //return await db.User.ToListAsync();
+
+            var users = await db.User.ToListAsync();
+            if (users == null)
+            {
+                return NotFound(new { success = 0, message = "Not Found" });
+            }
+
+            if (users.Count() == 0)
+            {
+                return Unauthorized(new { success = 0, message = "Unauthorized Account" });
+            }
+
+            return Ok(new
+            {
+                success = 1,
+                message = "Users Fethed Successfully",
+                users
+            });
         }
 
         // GET: api/Users1/5
@@ -44,6 +64,8 @@ namespace InterApro.Controllers
         [HttpPost("create")]
         public async Task<ActionResult<User>> PostCreate(User user)
         {
+            var hashedPassword = HashPassword(user.Password);
+            user.Password = hashedPassword;
             db.User.Add(user);
             await db.SaveChangesAsync();
 
@@ -52,25 +74,37 @@ namespace InterApro.Controllers
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<User>> Delete(int id)
+        public async Task<ActionResult<UserViewModelLogged>> Delete(int id)
         {
             var user = await db.User.FindAsync(id);
             if (user == null)
             {
-                return NotFound();
+                return NotFound(new { success = 0, message = "Not Found" });
             }
 
             db.User.Remove(user);
             await db.SaveChangesAsync();
 
-            return user;
+            return Ok(new
+            {
+                success = 1,
+                message = "User Successfully Deleted",
+                firstname = user.FirstName,
+                lastname = user.LastName,
+                email = user.Email,
+                username = user.Username,
+                rol = user.Rol,
+                status = user.Status,
+                isLogged = true
+            });
         }
 
         // POST: api/users/login
         [HttpPost("login")]
         public async Task<ActionResult<UserViewModelLogged>> PostLogin(User user)
         {
-            var u = await db.User.Where(u => u.Username == user.Username && u.Password == user.Password).ToListAsync();
+            var hashedPassword = HashPassword(user.Password);
+            var u = await db.User.Where(u => u.Username == user.Username && u.Password == hashedPassword).ToListAsync();
 
             if (u == null)
             {
@@ -89,10 +123,23 @@ namespace InterApro.Controllers
                 lastname = u[0].LastName,
                 email = u[0].Email,
                 username = u[0].Username,
-                rol = Int32.Parse(u[0].Rol),
-                status = Int32.Parse(u[0].Status),
+                rol = u[0].Rol,
+                status = u[0].Status,
                 isLogged = true
-            });;
+            });
+        }
+
+        public static string HashPassword(string password, string algorithm = "sha256")
+        {
+            return Hash(Encoding.UTF8.GetBytes(password), algorithm);
+        }
+
+        private static string Hash(byte[] input, string algorithm = "sha256")
+        {
+            using (var hashAlgorithm = HashAlgorithm.Create(algorithm))
+            {
+                return Convert.ToBase64String(hashAlgorithm.ComputeHash(input));
+            }
         }
     }
 

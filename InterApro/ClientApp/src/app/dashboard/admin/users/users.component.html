@@ -4,40 +4,49 @@
   </div>
 </div>
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col">Name</th>
-      <th scope="col">Email</th>
-      <th scope="col">Username</th>
-      <th scope="col">Rol</th>
-      <th scope="col">Status</th>
-      <th scope="col">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <ng-container *ngIf="users && users.length > 0">
-      <tr *ngFor="let user of users; let i = index">
-        <td>{{ user.firstName }} {{ user.lastName }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.username }}</td>
-        <td>{{getRolName(user.rol)}}</td>
-        <td><span class="badge badge-pill" [ngClass]="{'badge-danger':user.status === 0, 'badge-success':user.status === 1}">{{ user.status == 0? 'Inactive' : 'Active' }}</span></td>
-        <td>
-          <div class="btn-group" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-link text-dark" [disabled]="user.rol == -1" data-toggle="tooltip" data-placement="top" title="Edit" (click)="editUser(user.id)"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-            <button type="button" class="btn btn-link text-danger" [disabled]="user.rol == -1" data-toggle="tooltip" data-placement="top" title="Delete" (click)="deleteUser(user.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
-          </div>
-        </td>
-      </tr>
-    </ng-container>
-    <ng-container *ngIf="users && users.length == 0">
-      <tr>
-        <td colspan="7" class="text-center">No users</td>
-      </tr>
-    </ng-container>
-  </tbody>
-</table>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="row loading" *ngIf="loading">
+      <div class="spinner-border text-info align-self-center" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Username</th>
+          <th scope="col">Rol</th>
+          <th scope="col">Status</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngIf="users && users.length > 0">
+          <tr *ngFor="let user of users; let i = index">
+            <td>{{ user.firstName }} {{ user.lastName }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{getRolName(user.rol)}}</td>
+            <td><span class="badge badge-pill" [ngClass]="{'badge-danger':user.status == 0, 'badge-success':user.status == 1}">{{ user.status == 0? 'Inactive' : 'Active' }}</span></td>
+            <td>
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-link text-dark" [disabled]="user.rol == -1" data-toggle="tooltip" data-placement="top" title="Edit" (click)="editUser(user.id)"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                <button type="button" class="btn btn-link text-danger" [disabled]="user.rol == -1" data-toggle="tooltip" data-placement="top" title="Delete" (click)="deleteUser(user.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container *ngIf="users && users.length == 0">
+          <tr>
+            <td colspan="7" class="text-center">No users</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="createUser" #createUserModal tabindex="-1" role="dialog" aria-labelledby="createUserLabel" aria-hidden="true">

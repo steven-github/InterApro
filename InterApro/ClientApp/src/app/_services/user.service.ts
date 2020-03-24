@@ -72,14 +72,16 @@ export class UserService {
   //}
 
   create(form: any): Observable<any> {
+    console.log(typeof Number(form.controls.status.value));
+    console.log(typeof Number(form.controls.rol.value));
     return this.http.post<Response>(this.baseUrl + 'api/users/create', {
       'FirstName': form.controls.firstName.value,
       'LastName': form.controls.lastName.value,
       'Email': form.controls.email.value,
       'Username': form.controls.username.value,
       'Password': form.controls.password.value,
-      'Status': form.controls.status.value,
-      'Rol': form.controls.rol.value
+      'Status': Number(form.controls.status.value),
+      'Rol': Number(form.controls.rol.value)
     }, httpOptions);
   }
 

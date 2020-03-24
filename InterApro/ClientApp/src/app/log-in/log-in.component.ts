@@ -15,7 +15,7 @@ export class LogInComponent implements OnInit {
 
   loginForm: FormGroup;
   submitted = false;
-  loading = false;
+  loading: boolean = false;
   user: User[];
 
   constructor(private _userService: UserService, private formBuilder: FormBuilder, private toastr: ToastrService, private _router: Router) {}
@@ -50,7 +50,7 @@ export class LogInComponent implements OnInit {
         });
       } else {
         this.toastr.success(results['message'], 'Success', {
-          timeOut: 1500,
+          timeOut: 1000,
           progressBar: true
         }).onHidden.subscribe(() => {
           localStorage.setItem('currentUser', JSON.stringify(results));

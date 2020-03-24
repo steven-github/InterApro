@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild, EventEmitter } from '@angular/core';
 import { UserService } from '../../../_services/user.service';
 import { User } from '../../../interfaces';
+import { ToastrService } from 'ngx-toastr';
 declare var $: any;
 
 @Component({
@@ -23,10 +24,11 @@ export class AdminUsersComponent implements OnInit {
     { id: 3, name: 'Financial Approver 2' },
     { id: 4, name: 'Financial Approver 3' }
   ];
+  loading: boolean = false;
   // test: boolean = true;
   // @ViewChild("createUserModal") createUserModal: ElementRef;
 
-  constructor(private _userService: UserService) {
+  constructor(private _userService: UserService, private toastr: ToastrService) {
     this.getUsers();
   }
 
@@ -35,10 +37,31 @@ export class AdminUsersComponent implements OnInit {
   }
 
   getUsers(): void {
-    //this.users = this._userService.getUsers();
-    this._userService.getUsers().subscribe(res => {
-      console.log('getUsers', res);
-      this.users = res;
+    this.loading = true;
+    this._userService.getUsers().subscribe(results => {
+      if (results['success'] == 0) {
+        this.toastr.error(results['message'], 'Error', {
+          timeOut: 1500,
+          progressBar: true
+        }).onHidden.subscribe(() => {
+          this.loading = false;
+        });
+      } else {
+        this.toastr.success(results['message'], 'Success', {
+          timeOut: 500,
+          progressBar: true
+        }).onHidden.subscribe(() => {
+          this.users = results['users'];
+          this.loading = false;
+        });
+      }
+    }, error => {
+      this.toastr.error(error.error['message'], 'Error', {
+        timeOut: 1500,
+        progressBar: true
+      }).onHidden.subscribe(() => {
+        this.loading = false;
+      });
     });
   }
 
@@ -46,10 +69,6 @@ export class AdminUsersComponent implements OnInit {
     $('#createUser').modal('hide');
     console.log('event', event);
     this.getUsers();
-  //   setTimeout (() => {
-  //     console.log("Hello from setTimeout");
-  //     this.getUsers();
-  //  }, 1000);
   }
 
   editUser(id: number): void {
@@ -57,8 +76,24 @@ export class AdminUsersComponent implements OnInit {
   }
 
   deleteUser(id: number): void {
-    this._userService.delete(id).subscribe(res => {
-      console.log('delete', res);
+    this._userService.delete(id).subscribe(results => {
+      if (results['success'] == 0) {
+        this.toastr.error(results['message'], 'Error', {
+          timeOut: 1500,
+          progressBar: true
+        }).onHidden.subscribe(() => {
+          this.loading = false;
+        });
+      } else {
+        this.getUsers();
+      }
+    }, error => {
+      this.toastr.error(error.error['message'], 'Error', {
+        timeOut: 1500,
+        progressBar: true
+      }).onHidden.subscribe(() => {
+        this.loading = false;
+      });
     });
   }
 

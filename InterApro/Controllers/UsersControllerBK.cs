@@ -34,7 +34,7 @@ namespace InterApro.Controllers
                                             Username = d.Username,
                                             Password = d.Password,
                                             Status = d.Status,
-                                            Rol = d.Rol
+                                            Rol = d.Rol.ToString()
                                         }).ToList();
             return list;
         }
@@ -47,13 +47,15 @@ namespace InterApro.Controllers
 
             try
             {
-                Models.User newUser = new Models.User();
-                newUser.FirstName = model.FirstName;
-                newUser.LastName = model.LastName;
-                newUser.Email = model.Email;
-                newUser.Username = model.Username;
-                newUser.Password = model.Password;
-                newUser.Rol = model.Rol;
+                Models.User newUser = new Models.User
+                {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Email = model.Email,
+                    Username = model.Username,
+                    Password = model.Password,
+                    Rol = Int32.Parse(model.Rol)
+                };
                 db.User.Add(newUser);
                 db.SaveChanges();
                 response.Success = 1;

@@ -54,18 +54,20 @@ export class AdminCreateAccountComponent implements OnInit {
       return;
     }
 
+    this.loading = true;
+
     this._userService.create(this.createAccountForm).subscribe(results => {
       console.log('results', results);
       if (results['success'] == 0) {
         this.toastr.error(results['message'], 'Error', {
-          timeOut: 1500,
+          timeOut: 1000,
           progressBar: true
         }).onHidden.subscribe(() => {
           this.loading = false;
         });
       } else {
         this.toastr.success(results['message'], 'Success', {
-          timeOut: 1500,
+          timeOut: 1000,
           progressBar: true
         }).onHidden.subscribe(() => {
           this.submitted = false;

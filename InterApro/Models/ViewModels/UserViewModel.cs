@@ -14,8 +14,9 @@ namespace InterApro.Models.ViewModels
         public string Email { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
-        [DefaultValue("0")]
-        public string Status { get; set; }
+        [DefaultValue(0)]
+        public int Status { get; set; }
+        [DefaultValue(0)]
         public string Rol { get; set; }
     }
     public class UserViewModelLogged
@@ -24,7 +25,7 @@ namespace InterApro.Models.ViewModels
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Username { get; set; }
-        public string Status { get; set; }
-        public string Rol { get; set; }
+        public int Status { get; set; }
+        public int Rol { get; set; }
     }
 }
