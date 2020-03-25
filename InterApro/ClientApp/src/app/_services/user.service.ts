@@ -35,6 +35,10 @@ export class UserService {
     return this.http.get<User[]>(this.baseUrl + 'api/users');
   }
 
+  getUser(id): Observable<User[]> {
+    return this.http.get<User[]>(this.baseUrl + 'api/users/' + id);
+  }
+
   public get currentUserValue(): User {
     return this.currentUserSubject.value;
 }
@@ -72,9 +76,21 @@ export class UserService {
   //}
 
   create(form: any): Observable<any> {
-    console.log(typeof Number(form.controls.status.value));
-    console.log(typeof Number(form.controls.rol.value));
     return this.http.post<Response>(this.baseUrl + 'api/users/create', {
+      'FirstName': form.controls.firstName.value,
+      'LastName': form.controls.lastName.value,
+      'Email': form.controls.email.value,
+      'Username': form.controls.username.value,
+      'Password': form.controls.password.value,
+      'Status': Number(form.controls.status.value),
+      'Rol': Number(form.controls.rol.value)
+    }, httpOptions);
+  }
+
+  edit(id: number, form: any): Observable<any> {
+    console.log('form', form);
+    return this.http.put(this.baseUrl + 'api/users/' + id, { 
+      'Id': id,
       'FirstName': form.controls.firstName.value,
       'LastName': form.controls.lastName.value,
       'Email': form.controls.email.value,

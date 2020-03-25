@@ -12,6 +12,7 @@ declare var $: any;
 export class AdminUsersComponent implements OnInit {
 
   users: User[];
+  user: User[];
   status = [
     { id: -1, name: 'Active' },
     { id: 0, name: 'Inactive' }
@@ -25,6 +26,8 @@ export class AdminUsersComponent implements OnInit {
     { id: 4, name: 'Financial Approver 3' }
   ];
   loading: boolean = false;
+  isOpen: boolean = false;
+  userId: number;
   // test: boolean = true;
   // @ViewChild("createUserModal") createUserModal: ElementRef;
 
@@ -65,14 +68,21 @@ export class AdminUsersComponent implements OnInit {
     });
   }
 
-  closeModal(event): void {
-    $('#createUser').modal('hide');
-    console.log('event', event);
+  closeModal(event?: any): void {
+    console.log('closeModal', event);
+    if (event === 0) {
+      $('#createUser').modal('hide');
+    } else if(event === 1) {
+      $('#editUser').modal('hide');
+      this.isOpen = false;
+    }
     this.getUsers();
   }
 
   editUser(id: number): void {
-    console.log('id', id);
+    this.userId = id;
+    this.isOpen = true;
+    $('#editUser').modal('show');
   }
 
   deleteUser(id: number): void {

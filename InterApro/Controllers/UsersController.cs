@@ -46,7 +46,7 @@ namespace InterApro.Controllers
             });
         }
 
-        // GET: api/Users1/5
+        // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
@@ -54,10 +54,21 @@ namespace InterApro.Controllers
 
             if (user == null)
             {
-                return NotFound();
+                return NotFound(new { success = 0, message = "User Not Found" });
             }
 
-            return user;
+            // return user;
+            return Ok(new
+            {
+                success = 1,
+                message = "User Successfully Found",
+                firstname = user.FirstName,
+                lastname = user.LastName,
+                email = user.Email,
+                username = user.Username,
+                rol = user.Rol,
+                status = user.Status
+            });
         }
 
         // POST: api/Users
@@ -79,7 +90,7 @@ namespace InterApro.Controllers
             var user = await db.User.FindAsync(id);
             if (user == null)
             {
-                return NotFound(new { success = 0, message = "Not Found" });
+                return NotFound(new { success = 0, message = "User Not Found" });
             }
 
             db.User.Remove(user);
@@ -108,7 +119,7 @@ namespace InterApro.Controllers
 
             if (u == null)
             {
-                return NotFound(new { success = 0, message = "Not Found" });
+                return NotFound(new { success = 0, message = "User Not Found" });
             }
 
             if (u.Count() == 0)
@@ -127,6 +138,50 @@ namespace InterApro.Controllers
                 status = u[0].Status,
                 isLogged = true
             });
+        }
+
+        // PUT: api/Users/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutUser(int id, User user)
+        {
+            if (id != user.Id)
+            {
+                return BadRequest();
+            }
+
+            //If password is empty then keep the current password
+            if (string.IsNullOrEmpty(user.Password))
+            {
+                var u = await db.User.FindAsync(user.Id);
+                user.Password = u.Password;
+            }
+
+            db.Entry(user).State = EntityState.Modified;
+
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Ok(new { success = 1, message = "User Successfully Updated" });
+        }
+
+        private bool UserExists(int id)
+        {
+            return db.User.Any(e => e.Id == id);
         }
 
         public static string HashPassword(string password, string algorithm = "sha256")

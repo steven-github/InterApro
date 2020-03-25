@@ -50,7 +50,6 @@ export class AdminCreateAccountComponent implements OnInit {
 
     // stop here if form is invalid
     if (this.createAccountForm.invalid) {
-      console.log('this.createAccountForm', this.createAccountForm);
       return;
     }
 
@@ -73,7 +72,7 @@ export class AdminCreateAccountComponent implements OnInit {
           this.submitted = false;
           this.createAccountForm.reset();
           this.loading = false;
-          this.closeModal.emit(1);
+          this.closeModal.emit(0);
           return false;
         });
       }

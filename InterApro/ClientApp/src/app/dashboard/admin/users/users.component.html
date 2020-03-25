@@ -65,3 +65,19 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="editUser" #editUserModal tabindex="-1" role="dialog" aria-labelledby="editUserLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editUserLabel">Edit User Account</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-admin-edit-account [isOpen]="isOpen" [userId]="userId" (closeModal)="closeModal($event)"></app-admin-edit-account>
+      </div>
+    </div>
+  </div>
+</div>
