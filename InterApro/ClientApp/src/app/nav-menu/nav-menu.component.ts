@@ -5,14 +5,18 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-nav-menu',
   templateUrl: './nav-menu.component.html',
-  styleUrls: ['./nav-menu.component.css']
+  styleUrls: ['./nav-menu.component.scss']
 })
 export class NavMenuComponent {
   isExpanded = false;
 
-  constructor(private _userService: UserService, private _router: Router) {}
-
-  ngOnInit() {}
+  constructor(private _userService: UserService, private _router: Router) {
+    if(this._userService.currentUserValue == null) {
+      
+    }
+    console.log('currentUserValue', this._userService.currentUserValue);
+    console.log('currentUser', this._userService.currentUser);
+  }
 
   collapse() {
     this.isExpanded = false;
@@ -23,8 +27,7 @@ export class NavMenuComponent {
   }
 
   logout() {
-    this._userService.logout();
+    this._userService.logoutUser();
     this._router.navigate(['/log-in']);
-    return false;
   }
 }

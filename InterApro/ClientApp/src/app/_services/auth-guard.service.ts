@@ -13,8 +13,8 @@ export class AuthGuardService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree {
     if (!this._userService.isUserLoggedIn()) {
-      this.toastr.error('You are not allowed to access this page. Go and login first.', 'Error', {
-        timeOut: 5000,
+      this.toastr.error('Unauthorized', 'Attention', {
+        timeOut: 1000,
         progressBar: true
       }).onHidden.subscribe(() => {});
       //this._router.navigate(["log-in"], { queryParams: { retUrl: route.url } });

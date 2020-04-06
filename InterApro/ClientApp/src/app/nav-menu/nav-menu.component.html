@@ -2,47 +2,52 @@
   <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3">
     <div class="container">
       <a class="navbar-brand" [routerLink]="['/']">InterApro</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-label="Toggle navigation" [attr.aria-expanded]="isExpanded" (click)="toggle()">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse"
+        aria-label="Toggle navigation" [attr.aria-expanded]="isExpanded" (click)="toggle()">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" [ngClass]="{ show: isExpanded }">
         <ul class="navbar-nav flex-grow">
           <!-- <li class="nav-item" [routerLinkActive]="['link-active']" [routerLinkActiveOptions]="{ exact: true }">
-    <a class="nav-link text-dark" [routerLink]="['/']">Home</a>
-  </li>
-  <li class="nav-item" [routerLinkActive]="['link-active']">
-    <a class="nav-link text-dark" [routerLink]="['/counter']">Counter</a>
-  </li>
-  <li class="nav-item" [routerLinkActive]="['link-active']">
-    <a class="nav-link text-dark" [routerLink]="['/fetch-data']">Fetch data</a>
-  </li>
-  <li class="nav-item" [routerLinkActive]="['link-active']">
-    <a class="nav-link text-dark" [routerLink]="['/fetch-data']">Fetch data</a>
-  </li> -->
-          <li class="nav-item" *ngIf="!_userService.currentUser">
+<a class="nav-link text-dark" [routerLink]="['/']">Home</a>
+</li>
+<li class="nav-item" [routerLinkActive]="['link-active']">
+<a class="nav-link text-dark" [routerLink]="['/counter']">Counter</a>
+</li>
+<li class="nav-item" [routerLinkActive]="['link-active']">
+<a class="nav-link text-dark" [routerLink]="['/fetch-data']">Fetch data</a>
+</li>
+<li class="nav-item" [routerLinkActive]="['link-active']">
+<a class="nav-link text-dark" [routerLink]="['/fetch-data']">Fetch data</a>
+</li> -->
+          <li class="nav-item" *ngIf="!_userService.currentUserValue">
             <a class="nav-link text-dark" [routerLink]="['/log-in']" routerLinkActive="active">LogIn</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="_userService.currentUser.isAdmin">
             <a class="nav-link text-dark" [routerLink]="['/dashboard/admin']" routerLinkActive="active">Admin</a>
+          </li>
+          <li class="nav-item" *ngIf="_userService.currentUser.isAdmin || _userService.currentUser.rol === 0">
+            <a class="nav-link text-dark" [routerLink]="['/dashboard/buyer']" routerLinkActive="active">
+              <span *ngIf="_userService.currentUser.isAdmin">Buyer</span>
+              <span *ngIf="_userService.currentUser.rol === 0">My Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item" *ngIf="_userService.currentUser.isAdmin || _userService.currentUser.rol === 1">
+            <a class="nav-link text-dark" [routerLink]="['/dashboard/boss']" routerLinkActive="active">
+              <span *ngIf="_userService.currentUser.isAdmin">Boss</span>
+              <span *ngIf="_userService.currentUser.rol === 1">My Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item" *ngIf="_userService.currentUser.isAdmin || _userService.currentUser.rol === 2">
+            <a class="nav-link text-dark" [routerLink]="['/dashboard/financial-approver']" routerLinkActive="active">
+              <span *ngIf="_userService.currentUser.isAdmin">Financial Approval</span>
+              <span *ngIf="_userService.currentUser.rol === 2">My Dashboard</span>
+            </a>
           </li>
           <!--<li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="!_userService.currentUser">
             <a class="nav-link text-dark" [routerLink]="['/forgot-password']">Forgot Password</a>
           </li>-->
-          <li class="nav-item dropdown" *ngIf="_userService.currentUser">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Dashboard
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="nav-link text-dark" [routerLink]="['/dashboard/admin']" routerLinkActive="active">Admin</a>
-              <div class="dropdown-divider"></div>
-              <a class="nav-link text-dark" [routerLink]="['/dashboard/buyer']" routerLinkActive="active">Buyer</a>
-              <div class="dropdown-divider"></div>
-              <a class="nav-link text-dark" [routerLink]="['/dashboard/boss']" routerLinkActive="active">Boss</a>
-              <div class="dropdown-divider"></div>
-              <a class="nav-link text-dark" [routerLink]="['/dashboard/financial-approver']" routerLinkActive="active">Financial Approver</a>
-            </div>
-          </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="_userService.currentUser" (click)="logout()">
+          <li class="nav-item" *ngIf="_userService.currentUserValue" (click)="logout()">
             <a href="javascript:void(0);" class="nav-link text-dark">Logout</a>
           </li>
         </ul>

@@ -32,6 +32,8 @@ import { AdminCreateAccountComponent } from './dashboard/admin/create-account/cr
 import { ErrorInterceptor } from './_helpers/error.interceptor';
 import { BasicAuthInterceptor } from './_helpers/basic-auth.interceptor';
 import { AdminEditAccountComponent } from './dashboard/admin/edit-account/edit-account.component';
+import { EditRequestComponent } from './dashboard/buyer/requests/edit-request/edit-request.component';
+import { CreateRequestComponent } from './dashboard/buyer/requests/create-request/create-request.component';
 
 
 @NgModule({
@@ -56,7 +58,9 @@ import { AdminEditAccountComponent } from './dashboard/admin/edit-account/edit-a
     AdminComponent,
     AdminUsersComponent,
     AdminCreateAccountComponent,
-    AdminEditAccountComponent
+    AdminEditAccountComponent,
+    EditRequestComponent,
+    CreateRequestComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

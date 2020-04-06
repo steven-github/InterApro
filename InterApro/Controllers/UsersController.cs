@@ -46,6 +46,55 @@ namespace InterApro.Controllers
             });
         }
 
+        // GET: api/users/requests/5
+        [HttpGet("requests-by-id/{id}")]
+        public async Task<ActionResult<User>> GetRequestsById(int id)
+        {
+            var requests = await db.Requests.Where(u => u.UserId == id).ToListAsync();
+
+            if (requests == null)
+            {
+                return NotFound(new { success = 0, message = "Requests Not Found" });
+            }
+
+            // return request;
+            return Ok(new
+            {
+                success = 1,
+                message = "Requests Successfully Found",
+                requests
+            });
+        }
+
+        // GET: api/Users/5
+        [HttpGet("request/{id}")]
+        public async Task<ActionResult<User>> GetRequest(int id)
+        {
+            var request = await db.Requests.FindAsync(id);
+
+            if (request == null)
+            {
+                return NotFound(new { success = 0, message = "Request Not Found" });
+            }
+
+            // return request;
+            return Ok(new
+            {
+                success = 1,
+                message = "Request Successfully Found",
+                id = request.Id,
+                userId = request.UserId,
+                firstName = request.FirstName,
+                lastName = request.LastName,
+                email = request.Email,
+                username = request.Username,
+                assigneeId = request.AssigneeId,
+                assigneeName = request.AssigneeName,
+                price = request.Price,
+                description = request.Description
+            });
+        }
+
         // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
@@ -62,8 +111,9 @@ namespace InterApro.Controllers
             {
                 success = 1,
                 message = "User Successfully Found",
-                firstname = user.FirstName,
-                lastname = user.LastName,
+                userId = user.Id,
+                firstName = user.FirstName,
+                lastName = user.LastName,
                 email = user.Email,
                 username = user.Username,
                 rol = user.Rol,
@@ -71,21 +121,135 @@ namespace InterApro.Controllers
             });
         }
 
-        // POST: api/Users
-        [HttpPost("create")]
-        public async Task<ActionResult<User>> PostCreate(User user)
+        // GET: api/Users/assignee/5
+        [HttpGet("assignee/{id}")]
+        public async Task<ActionResult<UserViewModelLogged>> GetAssignee(int id)
+        {
+            var user = await db.User.Where(u => u.Id == id).ToListAsync();
+            if (user == null)
+            {
+                return NotFound(new { success = 0, message = "Not Found" });
+            }
+
+            if (user.Count() == 0)
+            {
+                return NotFound(new { success = 0, message = "Not Assignee Found" });
+            }
+
+            return Ok(new
+            {
+                success = 1,
+                message = "User Successfully Found",
+                firstName = user[0].FirstName,
+                lastName = user[0].LastName
+            });
+        }
+
+        // GET: api/Users/Boss/5
+        [HttpGet("boss/{id}")]
+        public async Task<ActionResult<User>> GetBoss(int id)
+        {
+            var user = await db.User.FindAsync(id);
+
+            if (user == null)
+            {
+                return NotFound(new { success = 0, message = "Boss Not Found" });
+            }
+
+            // return user;
+            return Ok(new
+            {
+                success = 1,
+                message = "Boss Successfully Found",
+                userId = user.Id,
+                firstName = user.FirstName,
+                lastName = user.LastName,
+                email = user.Email,
+                username = user.Username,
+                rol = user.Rol,
+                status = user.Status
+            });
+        }
+
+        // GET: api/users/bosses
+        [HttpGet("bosses")]
+        public async Task<ActionResult<IEnumerable<UserViewModelLogged>>> GetBosses()
+        {
+            var bosses = await db.User.Where(u => u.Rol == 1).ToListAsync();
+            if (bosses == null)
+            {
+                return NotFound(new { success = 0, message = "Not Found" });
+            }
+
+            if (bosses.Count() == 0)
+            {
+                return NotFound(new { success = 0, message = "You need at least 1 boss profile" });
+            }
+
+            return Ok(new
+            {
+                success = 1,
+                message = "Bosses Fethed Successfully",
+                bosses
+            });
+        }
+
+        // GET: api/users/requests
+        [HttpGet("requests")]
+        public async Task<ActionResult<IEnumerable<Requests>>> GetRequests()
+        {
+
+            var requests = await db.Requests.ToListAsync();
+            if (requests == null)
+            {
+                return NotFound(new { success = 0, message = "Not Found" });
+            }
+
+            if (requests.Count() == 0)
+            {
+                return Ok(new { success = 1, message = "Not Requests Found", requests });
+            }
+
+            var index = 0;
+            foreach (var request in requests)
+            {
+                var assigneeId = await db.User.FindAsync(request.AssigneeId);
+                //requests[index]. = assigneeId.FirstName + assigneeId.LastName;
+            }
+
+            return Ok(new
+            {
+                success = 1,
+                message = "Requests Fethed Successfully",
+                requests
+            });
+        }
+
+        // POST: api/users/create-user
+        [HttpPost("create-user")]
+        public async Task<ActionResult<User>> PostCreateUser(User user)
         {
             var hashedPassword = HashPassword(user.Password);
             user.Password = hashedPassword;
             db.User.Add(user);
             await db.SaveChangesAsync();
 
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            return CreatedAtAction("PostCreateUser", new { id = user.Id }, user);
+        }
+
+        // POST: api/users/create-request
+        [HttpPost("create-request")]
+        public async Task<ActionResult<Requests>> PostCreateRequest(Requests request)
+        {
+            db.Requests.Add(request);
+            await db.SaveChangesAsync();
+
+            return CreatedAtAction("PostCreateRequest", new { id = request.Id }, request);
         }
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<UserViewModelLogged>> Delete(int id)
+        public async Task<ActionResult<UserViewModelLogged>> DeleteUser(int id)
         {
             var user = await db.User.FindAsync(id);
             if (user == null)
@@ -100,13 +264,33 @@ namespace InterApro.Controllers
             {
                 success = 1,
                 message = "User Successfully Deleted",
-                firstname = user.FirstName,
-                lastname = user.LastName,
+                firstName = user.FirstName,
+                lastName = user.LastName,
                 email = user.Email,
                 username = user.Username,
                 rol = user.Rol,
                 status = user.Status,
                 isLogged = true
+            });
+        }
+
+        // DELETE: api/Users/delete-request/5
+        [HttpDelete("delete-request/{id}")]
+        public async Task<ActionResult<UserViewModelLogged>> DeleteRequest(int id)
+        {
+            var request = await db.Requests.FindAsync(id);
+            if (request == null)
+            {
+                return NotFound(new { success = 0, message = "Request Not Found" });
+            }
+
+            db.Requests.Remove(request);
+            await db.SaveChangesAsync();
+
+            return Ok(new
+            {
+                success = 1,
+                message = "Request Successfully Deleted"
             });
         }
 
@@ -129,14 +313,17 @@ namespace InterApro.Controllers
 
             return Ok(new { 
                 success = 1, 
-                message = "Access Granted", 
-                firstname = u[0].FirstName,
-                lastname = u[0].LastName,
+                message = "Access Granted",
+                userId = u[0].Id,
+                firstName = u[0].FirstName,
+                lastName = u[0].LastName,
                 email = u[0].Email,
                 username = u[0].Username,
+                bossId = u[0].BossId,
                 rol = u[0].Rol,
                 status = u[0].Status,
-                isLogged = true
+                isLogged = true,
+                isAdmin = u[0].Rol == -1 ? 1 : 0
             });
         }
 
@@ -151,14 +338,21 @@ namespace InterApro.Controllers
                 return BadRequest();
             }
 
+            var localU = await db.User.FindAsync(user.Id);
+            localU.FirstName = user.FirstName;
+            localU.LastName = user.LastName;
+            localU.Email = user.Email;
+            localU.Username = user.Username;
+            localU.Status = user.Status;
+            localU.Rol = user.Rol;
+
             //If password is empty then keep the current password
-            if (string.IsNullOrEmpty(user.Password))
+            if (!string.IsNullOrEmpty(user.Password))
             {
-                var u = await db.User.FindAsync(user.Id);
-                user.Password = u.Password;
+                localU.Password = HashPassword(user.Password);
             }
 
-            db.Entry(user).State = EntityState.Modified;
+            db.Entry(localU).State = EntityState.Modified;
 
             try
             {
@@ -179,9 +373,50 @@ namespace InterApro.Controllers
             return Ok(new { success = 1, message = "User Successfully Updated" });
         }
 
+        // PUT: api/users/edit-requet/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
+        [HttpPut("edit-request/{id}")]
+        public async Task<IActionResult> PutRequest(int id, Requests request)
+        {
+            if (id != request.Id)
+            {
+                return BadRequest();
+            }
+
+            var localR = await db.Requests.FindAsync(request.Id);
+            localR.Price = request.Price;
+            localR.Description = request.Description;
+
+            db.Entry(localR).State = EntityState.Modified;
+
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!RequestExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Ok(new { success = 1, message = "Request Successfully Updated" });
+        }
+
         private bool UserExists(int id)
         {
             return db.User.Any(e => e.Id == id);
+        }
+
+        private bool RequestExists(int id)
+        {
+            return db.Requests.Any(e => e.Id == id);
         }
 
         public static string HashPassword(string password, string algorithm = "sha256")
@@ -191,10 +426,8 @@ namespace InterApro.Controllers
 
         private static string Hash(byte[] input, string algorithm = "sha256")
         {
-            using (var hashAlgorithm = HashAlgorithm.Create(algorithm))
-            {
-                return Convert.ToBase64String(hashAlgorithm.ComputeHash(input));
-            }
+            using var hashAlgorithm = HashAlgorithm.Create(algorithm);
+            return Convert.ToBase64String(hashAlgorithm.ComputeHash(input));
         }
     }
 

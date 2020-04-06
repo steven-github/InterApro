@@ -18,7 +18,7 @@ export class LogInComponent implements OnInit {
   loading: boolean = false;
   user: User[];
 
-  constructor(private _userService: UserService, private formBuilder: FormBuilder, private toastr: ToastrService, private _router: Router) {}
+  constructor(private _userService: UserService, private formBuilder: FormBuilder, private toastr: ToastrService, private _router: Router) { }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
@@ -40,9 +40,9 @@ export class LogInComponent implements OnInit {
 
     this.loading = true;
 
-    this._userService.login(this.loginForm).subscribe(results => {
+    this._userService.loginUser(this.loginForm).subscribe(results => {
       if (results['success'] == 0) {
-        this.toastr.error(results['message'], 'Error', {
+        this.toastr.error(results['message'], 'Attention', {
           timeOut: 1500,
           progressBar: true
         }).onHidden.subscribe(() => {
@@ -53,8 +53,8 @@ export class LogInComponent implements OnInit {
           timeOut: 1000,
           progressBar: true
         }).onHidden.subscribe(() => {
-          localStorage.setItem('currentUser', JSON.stringify(results));
-          this._userService.currentUser = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : '';
+          // localStorage.setItem('currentUser', JSON.stringify(results));
+          //this._userService.currentUser = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : null;
           switch (results['rol']) {
             case -1:
               this._router.navigate(['/dashboard/admin']);
@@ -75,12 +75,12 @@ export class LogInComponent implements OnInit {
         });
       }
     }, error => {
-        this.toastr.error(error.error['message'], 'Error', {
-          timeOut: 1500,
-          progressBar: true
-        }).onHidden.subscribe(() => {
-          this.loading = false;
-        });
+      this.toastr.error(error, 'Attention', {
+        timeOut: 1500,
+        progressBar: true
+      }).onHidden.subscribe(() => {
+        this.loading = false;
+      });
     });
   }
 

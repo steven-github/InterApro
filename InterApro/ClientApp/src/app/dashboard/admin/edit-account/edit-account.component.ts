@@ -5,6 +5,7 @@ import { UserService } from '../../../_services/user.service';
 import { Observable } from 'rxjs';
 import { User } from '../../../interfaces';
 import { ToastrService } from 'ngx-toastr';
+declare var $: any;
 
 @Component({
   selector: 'app-admin-edit-account',
@@ -21,11 +22,11 @@ export class AdminEditAccountComponent implements OnInit {
   editAccountForm: FormGroup;
   submitted = false;
   loading = false;
+  blockPasswordFields = true;
   user: User[];
 
   constructor(private _userService: UserService, private formBuilder: FormBuilder, private toastr: ToastrService) {
     // this.getUser();
-    console.log('constructor');
   }
 
   ngOnInit() {
@@ -41,11 +42,11 @@ export class AdminEditAccountComponent implements OnInit {
     }, {
       validator: MustMatch('password', 'confirmPassword')
     });
-    console.log('ngOnInit');
+    // console.log('ngOnInit');
   }
 
   ngAfterViewInit() {
-    console.log('ngAfterViewInit');
+    // console.log('ngAfterViewInit');
   }
 
   ngAfterViewChecked() {
@@ -53,33 +54,31 @@ export class AdminEditAccountComponent implements OnInit {
   }
 
   ngOnChanges() {
-    console.log('ngOnChanges');
+    // console.log('ngOnChanges');
     if (this.isOpen) {
-      setTimeout (() => {
-        console.log("Hello from setTimeout");
+      setTimeout(() => {
         this.getUser();
-      }, 0);  
+      }, 0);
     }
   }
 
   ngDoCheck() {
-    console.log('ngDoCheck');
+    // console.log('ngDoCheck');
   }
 
   viewToModelUpdate(newValue: any): void {
-    console.log('viewToModelUpdate');
+    // console.log('viewToModelUpdate');
   }
 
-  doSomething(event) {
-    console.log('doSomething', event); // logs model value
-  }
+  // doSomething(event) {
+  //   console.log('doSomething', event); // logs model value
+  // }
 
   getUser() {
     this._userService.getUser(this.userId).subscribe(results => {
       if (results['success'] == 1) {
-        console.log('getUser', results);
-        this.f.firstName.setValue(results['firstname']);
-        this.f.lastName.setValue(results['lastname']);
+        this.f.firstName.setValue(results['firstName']);
+        this.f.lastName.setValue(results['lastName']);
         this.f.email.setValue(results['email']);
         this.f.username.setValue(results['username']);
         this.f.status.setValue(results['status']);
@@ -103,10 +102,9 @@ export class AdminEditAccountComponent implements OnInit {
 
     this.loading = true;
 
-    this._userService.edit(this.userId, this.editAccountForm).subscribe(results => {
-      console.log('results', results);
+    this._userService.editUser(this.userId, this.editAccountForm).subscribe(results => {
       if (results['success'] == 0) {
-        this.toastr.error(results['message'], 'Error', {
+        this.toastr.error(results['message'], 'Attention', {
           timeOut: 1000,
           progressBar: true
         }).onHidden.subscribe(() => {
@@ -128,4 +126,3 @@ export class AdminEditAccountComponent implements OnInit {
   }
 
 }
-

@@ -1,6 +1,6 @@
 
 import { Injectable, Inject } from '@angular/core';
-import { User } from '../interfaces';
+import { User, Requests } from '../interfaces';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -19,77 +19,100 @@ const httpOptions = {
 export class UserService {
 
   baseUrl: string;
-  //currentUser: any;
-  currentUserSubject: BehaviorSubject<User>;
-  currentUser: Observable<User>;
+  currentUserSubject: BehaviorSubject<User> = null;
+  currentUser: Observable<User> = null;
 
   constructor(protected http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     this.baseUrl = baseUrl;
-    //this.currentUser = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : '';
-    //console.log('UserService', this.currentUser);
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
+  // ngOnInit() {
+  //   console.log('ngOnInit');
+  // }
+
+  // ngAfterViewInit() {
+  //   console.log('ngAfterViewInit');
+  // }
+
+  // ngAfterViewChecked() {
+  //   console.log('ngAfterViewChecked');
+  // }
+
+  // ngOnChanges() {
+  //   console.log('ngOnChanges');
+  // }
+
+  // ngDoCheck() {
+  //   console.log('ngDoCheck');
+  // }
+
+  // viewToModelUpdate(newValue: any): void {
+  //   console.log('viewToModelUpdate',  newValue);
+  // }
+
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>(this.baseUrl + 'api/users');
+  }
+
+  getBosses(): Observable<User[]> {
+    return this.http.get<User[]>(this.baseUrl + 'api/users/bosses');
+  }
+
+  getRequests(): Observable<User[]> {
+    return this.http.get<User[]>(this.baseUrl + 'api/users/requests');
   }
 
   getUser(id): Observable<User[]> {
     return this.http.get<User[]>(this.baseUrl + 'api/users/' + id);
   }
 
+  getRequest(id): Observable<Requests[]> {
+    return this.http.get<Requests[]>(this.baseUrl + 'api/users/request/' + id);
+  }
+
+  getRequestsById(id): Observable<Requests[]> {
+    return this.http.get<Requests[]>(this.baseUrl + 'api/users/request-by-id/' + id);
+  }
+
+  getAssignee(id): Observable<User[]> {
+    return this.http.get<User[]>(this.baseUrl + 'api/users/assignee/' + id);
+  }
+
+  getBoss(id): Observable<User[]> {
+    return this.http.get<User[]>(this.baseUrl + 'api/users/boss/' + id);
+  }
+
+
   public get currentUserValue(): User {
     return this.currentUserSubject.value;
-}
+  }
 
   isUserLoggedIn(): boolean {
     // const currentUser = localStorage.getItem('currentUser');
     const currentUser = this.currentUserValue;
-    console.log('isUserLoggedIn - currentUser', currentUser);
     if (currentUser && currentUser.authData) {
       return true;
     }
     return false;
   }
 
-  isAdmin(): boolean {
-    const currentUser = localStorage.getItem('currentUser');
-    console.log('currentUser', currentUser);
-    if (currentUser['isLogged'] && currentUser['rol'] == -1) {
-      return true;
-    }
-    return false;
-  }
-
-  //register(form) {
-  //  this.http.post<Response>(this.baseUrl + 'api/users', {
-  //    'FirstName': form.controls.firstName.value,
-  //    'LastName': form.controls.lastName.value,
-  //    'Email': form.controls.email.value,
-  //    'Username': form.controls.username.value,
-  //    'Password': form.controls.password.value,
-  //    'Rol': form.controls.rol.value
-  //  }, httpOptions).subscribe(result => {
-  //    console.log('result', result);
-  //  }, error => console.error('error', error));
-  //}
-
-  create(form: any): Observable<any> {
-    return this.http.post<Response>(this.baseUrl + 'api/users/create', {
+  createUser(form: any): Observable<any> {
+    return this.http.post<Response>(this.baseUrl + 'api/users/create-user', {
       'FirstName': form.controls.firstName.value,
       'LastName': form.controls.lastName.value,
       'Email': form.controls.email.value,
       'Username': form.controls.username.value,
       'Password': form.controls.password.value,
       'Status': Number(form.controls.status.value),
-      'Rol': Number(form.controls.rol.value)
+      'Rol': Number(form.controls.rol.value),
+      'BossId': Number(form.controls.bossId.value),
     }, httpOptions);
   }
 
-  edit(id: number, form: any): Observable<any> {
-    console.log('form', form);
-    return this.http.put(this.baseUrl + 'api/users/' + id, { 
+  editUser(id: number, form: any): Observable<any> {
+    return this.http.put(this.baseUrl + 'api/users/' + id, {
       'Id': id,
       'FirstName': form.controls.firstName.value,
       'LastName': form.controls.lastName.value,
@@ -101,18 +124,23 @@ export class UserService {
     }, httpOptions);
   }
 
-  delete(id: number): Observable<any> {
+  editRequest(id: number, form: any): Observable<any> {
+    return this.http.put(this.baseUrl + 'api/users/edit-request/' + id, { 
+      'Id': id,
+      'Price': form.controls.price.value,
+      'Description': form.controls.description.value
+    }, httpOptions);
+  }
+
+  deleteUser(id: number): Observable<any> {
     return this.http.delete(this.baseUrl + 'api/users/' + id, httpOptions);
   }
 
-  //login(form): Observable<Response> {
-  //  return this.http.post<Response>(this.baseUrl + 'api/users/login', {
-  //    'Username': form.controls.username.value,
-  //    'Password': form.controls.password.value
-  //  }, httpOptions);
-  //}
+  deleteRequest(id: number): Observable<any> {
+    return this.http.delete(this.baseUrl + 'api/users/delete-request/' + id, httpOptions);
+  }
 
-  login(form: any): Observable<Response> {
+  loginUser(form: any): Observable<Response> {
     return this.http.post<any>(this.baseUrl + 'api/users/login', {
       'Username': form.controls.username.value,
       'Password': form.controls.password.value
@@ -121,20 +149,32 @@ export class UserService {
         // store user details and basic auth credentials in local storage to keep user logged in between page refreshes
         user.authData = window.btoa(form.controls.username.value + ':' + form.controls.password.value);
         localStorage.setItem('currentUser', JSON.stringify(user));
+        this.currentUser = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : null;
         this.currentUserSubject.next(user);
         return user;
       }));
   }
 
-  //logout() {
-  //  // remove user data from local storage for log out
-  //  localStorage.removeItem('currentUser');
-  //  this.currentUser = null;
-  //}
-
-  logout() {
-    // remove user from local storage to log user out
+  logoutUser() {
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
+    this.currentUser = this.currentUserSubject;
+  }
+
+  createRequest(form: any) {
+    console.log('createRequest', form);      
+    return this.http.post<Response>(this.baseUrl + 'api/users/create-request', {
+      'userId': form.controls.userId.value,
+      'FirstName': form.controls.firstName.value,
+      'LastName': form.controls.lastName.value,
+      'Email': form.controls.email.value,
+      'Username': form.controls.username.value,
+      'assigneeId': form.controls.assigneeId.value,
+      'assigneeName': form.controls.assigneeName.value,
+      'price': form.controls.price.value,
+      'description': form.controls.description.value
+      // 'boss': form.controls.boss.value,      
+      // 'Rol': Number(form.controls.rol.value)
+    }, httpOptions);
   }
 }

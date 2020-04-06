@@ -1,9 +1,10 @@
-<div class="row mt-3 mb-3">
+<!-- <div class="row mt-3 mb-3">
   <div class="col-lg-6">
     <h3 class="text-info">Pending Requests</h3>
   </div>
   <div class="col-lg-6 text-right">
-    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus-circle" aria-hidden="true"></i> Create New Request</button>
+    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createRequest"><i
+        class="fa fa-plus-circle" aria-hidden="true"></i> Create New Request</button>
   </div>
 </div>
 <table class="table table-striped">
@@ -26,7 +27,8 @@
     </tr>
     <tr>
       <th scope="row">2</th>
-      <td>Apple MacBook Pro Retina MVVJ2E/A 16", Intel Core i7 2.60GHz, 16GB, 512GB SSD, macOS Catalina, Space Gray (Enero 2020)</td>
+      <td>Apple MacBook Pro Retina MVVJ2E/A 16", Intel Core i7 2.60GHz, 16GB, 512GB SSD, macOS Catalina, Space Gray
+        (Enero 2020)</td>
       <td>$3500</td>
       <td><span class="badge badge-pill badge-info">Analysis</span></td>
       <td>Apro3</td>
@@ -53,36 +55,98 @@
       <td>-</td>
     </tr>
   </tbody>
-</table>
+</table> -->
+
+<div class="row mt-3 mb-3">
+    <div class="col-lg-12 text-right">
+        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createRequest"><i
+                class="fa fa-plus-circle" aria-hidden="true"></i> Create Request</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="row loading" *ngIf="loading">
+            <div class="spinner-border text-info align-self-center" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Request Id</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Assigned To</th>
+                    <th scope="col">OrderStatus</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngIf="requests && requests.length > 0">
+                    <tr *ngFor="let request of requests">
+                        <td>{{ request.id }}</td>
+                        <td>{{ request.description }}</td>
+                        <td>{{ request.price | currency}}</td>
+                        <td>{{request.assigneeName}}</td>
+                        <td><span class="badge badge-pill"
+                                [ngClass]="{'badge-secondary': request.orderStatus == 'Pending', 'badge-success': request.orderStatus == 'In Progress'}">{{ request.orderStatus }}</span>
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-link text-dark" data-toggle="tooltip"
+                                    data-placement="top" title="Edit" (click)="editRequest(request.id)"><i
+                                        class="fa fa-pencil" aria-hidden="true"></i></button>
+                                <button type="button" class="btn btn-link text-danger" data-toggle="tooltip"
+                                    data-placement="top" title="Delete" (click)="deleteRequest(request.id)"><i
+                                        class="fa fa-trash" aria-hidden="true"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-container>
+                <ng-container *ngIf="requests && requests.length == 0">
+                    <tr>
+                        <td colspan="8" class="text-center">No requests found</td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">New Request</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form id="create-request-form" class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
-          <div class="form-group">
-            <input type="number" formControlName="price" class="form-control" id="price" placeholder="Price" [ngClass]="{ 'is-invalid': submitted && f.price.errors }" />
-            <div *ngIf="submitted && f.price.errors" class="invalid-feedback">
-              <div *ngIf="f.price.errors.required">Price is required</div>
+<div class="modal fade" id="createRequest" #createRequestModal tabindex="-1" role="dialog"
+    aria-labelledby="createRequestLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createUserLabel">Create Request</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-          </div>
-          <div class="form-group">
-            <textarea formControlName="description" class="form-control" id="description" placeholder="Description" [ngClass]="{ 'is-invalid': submitted && f.description.errors }"></textarea>
-            <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-              <div *ngIf="f.description.errors.required">Description is required</div>
+            <div class="modal-body">
+                <app-buyer-create-request (closeModal)="closeModal($event)"></app-buyer-create-request>
             </div>
-          </div>
-          <button type="submit" class="btn btn-info float-right">Create</button>
-          <button type="reset" class="btn btn-secondary float-right mr-2">Clear</button>
-        </form>
-      </div>
+        </div>
     </div>
-  </div>
+</div>
+
+<div class="modal fade" id="editRequest" #editRequestModal tabindex="-1" role="dialog"
+    aria-labelledby="editRequestLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserLabel">Edit Request</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <app-buyer-edit-request [isOpen]="isOpen" [requestId]="requestId" (closeModal)="closeModal($event)">
+                </app-buyer-edit-request>
+            </div>
+        </div>
+    </div>
 </div>

@@ -23,8 +23,11 @@ export class AdminCreateAccountComponent implements OnInit {
   loading = false;
   //users: Observable<User[]>;
   users: User[];
+  bosses: User[] = new Array();
 
-  constructor(private _userService: UserService, private formBuilder: FormBuilder, private toastr: ToastrService) {}
+  constructor(private _userService: UserService, private formBuilder: FormBuilder, private toastr: ToastrService) {
+    this.getBosses();
+  }
 
   ngOnInit() {
     this.createAccountForm = this.formBuilder.group({
@@ -34,11 +37,32 @@ export class AdminCreateAccountComponent implements OnInit {
       username: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(5)]],
       confirmPassword: ['', Validators.required],
-      status: [],
+      status: [null],
+      bossId: [null],
       rol: ['', Validators.required],
     }, {
       validator: MustMatch('password', 'confirmPassword')
     });
+
+    this.createAccountForm.get('rol').valueChanges
+      .subscribe(rol => {
+        console.log('rol', rol);
+        if (rol === '0') {
+          this.createAccountForm.get('bossId').setValidators([Validators.required]);
+        } else {
+          this.createAccountForm.get('bossId').setValidators(null);
+        }
+
+        // if (userCategory === 'employee') {
+        //   institutionControl.setValidators(null);
+        //   companyControl.setValidators([Validators.required]);
+        //   salaryControl.setValidators([Validators.required]);
+        // }
+
+        // institutionControl.updateValueAndValidity();
+        // companyControl.updateValueAndValidity();
+        // salaryControl.updateValueAndValidity();
+      });
   }
 
   // convenience getter for easy access to form fields
@@ -55,10 +79,10 @@ export class AdminCreateAccountComponent implements OnInit {
 
     this.loading = true;
 
-    this._userService.create(this.createAccountForm).subscribe(results => {
+    this._userService.createUser(this.createAccountForm).subscribe(results => {
       console.log('results', results);
       if (results['success'] == 0) {
-        this.toastr.error(results['message'], 'Error', {
+        this.toastr.error(results['message'], 'Attention', {
           timeOut: 1000,
           progressBar: true
         }).onHidden.subscribe(() => {
@@ -77,6 +101,37 @@ export class AdminCreateAccountComponent implements OnInit {
         });
       }
     }, error => console.error('error', error));
+  }
+
+  getBosses(): void {
+    this.loading = true;
+    this._userService.getBosses().subscribe(results => {
+      if (results['success'] == 0) {
+        this.toastr.error(results['message'], 'Attention', {
+          timeOut: 1500,
+          progressBar: true
+        }).onHidden.subscribe(() => {
+          this.loading = false;
+        });
+      } else {
+        this.toastr.success(results['message'], 'Success', {
+          timeOut: 500,
+          progressBar: true
+        }).onHidden.subscribe(() => {
+          this.bosses = results['bosses'];
+          this.loading = false;
+        });
+      }
+    }, error => {
+      console.log('asd', this.bosses.length);
+      this.toastr.warning(error, 'Not Bosses Found', {
+        timeOut: 3000,
+        progressBar: false,
+        // closeButton: true
+      }).onHidden.subscribe(() => {
+        this.loading = false;
+      });
+    });
   }
 
 }

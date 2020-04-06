@@ -117,18 +117,18 @@ namespace InterApro.Controllers
 
             return response;
         }
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] salt)
-        {
-            using (var hmac = new System.Security.Cryptography.HMACSHA512(salt))
-            {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                for (int i = 0; i < computedHash.Length; i++)
-                {
-                    if (computedHash[i] != passwordHash[i]) return false;
-                }
-            }
-            return true;
-        }
+        //private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] salt)
+        //{
+        //    using (var hmac = new System.Security.Cryptography.HMACSHA512(salt))
+        //    {
+        //        var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+        //        for (int i = 0; i < computedHash.Length; i++)
+        //        {
+        //            if (computedHash[i] != passwordHash[i]) return false;
+        //        }
+        //    }
+        //    return true;
+        //}
     }
 
     public class Response2
