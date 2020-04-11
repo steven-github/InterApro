@@ -61,9 +61,9 @@ export class RequestsBuyerComponent implements OnInit {
     });
   }
 
-  deleteRequest(id: number): void {
-    this._userService.deleteRequest(id).subscribe(results => {
-      console.log('deleteRequest', results);
+  deleteRequestById(id: number): void {
+    this._userService.deleteRequestById(id).subscribe(results => {
+      console.log('deleteRequestById', results);
       if (results['success'] == 0) {
         this.toastr.error(results['message'], 'Attention', {
           timeOut: 1500,

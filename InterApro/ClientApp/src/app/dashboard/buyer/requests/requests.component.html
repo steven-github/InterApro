@@ -75,7 +75,7 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th scope="col">Request Id</th>
+                    <th scope="col">#</th>
                     <th scope="col">Description</th>
                     <th scope="col">Price</th>
                     <th scope="col">Assigned To</th>
@@ -91,7 +91,7 @@
                         <td>{{ request.price | currency}}</td>
                         <td>{{request.assigneeName}}</td>
                         <td><span class="badge badge-pill"
-                                [ngClass]="{'badge-secondary': request.orderStatus == 'Pending', 'badge-success': request.orderStatus == 'In Progress'}">{{ request.orderStatus }}</span>
+                                [ngClass]="{'badge-secondary': request.orderStatus == 0, 'badge-success': request.orderStatus == 1}">{{ request.orderStatusDescription }}</span>
                         </td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Basic example">
@@ -99,7 +99,7 @@
                                     data-placement="top" title="Edit" (click)="editRequest(request.id)"><i
                                         class="fa fa-pencil" aria-hidden="true"></i></button>
                                 <button type="button" class="btn btn-link text-danger" data-toggle="tooltip"
-                                    data-placement="top" title="Delete" (click)="deleteRequest(request.id)"><i
+                                    data-placement="top" title="Delete" (click)="deleteRequestById(request.id)"><i
                                         class="fa fa-trash" aria-hidden="true"></i></button>
                             </div>
                         </td>

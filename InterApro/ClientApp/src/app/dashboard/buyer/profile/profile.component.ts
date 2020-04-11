@@ -53,6 +53,7 @@ export class ProfileBuyerComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
+    console.log('asd', this.editAccountBuyerForm);
 
     // stop here if form is invalid
     if (this.editAccountBuyerForm.invalid) {

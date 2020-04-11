@@ -68,7 +68,7 @@ export class EditRequestComponent implements OnInit {
 
     console.log('this.requestId', this.requestId);
 
-    this._userService.editRequest(this.requestId, this.editRequestForm).subscribe(results => {
+    this._userService.editRequestByCreator(this.requestId, this.editRequestForm).subscribe(results => {
       console.log('editRequest', results);
       if (results['success'] == 0) {
         this.toastr.error(results['message'], 'Attention', {

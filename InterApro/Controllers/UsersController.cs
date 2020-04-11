@@ -46,11 +46,11 @@ namespace InterApro.Controllers
             });
         }
 
-        // GET: api/users/requests/5
-        [HttpGet("requests-by-id/{id}")]
-        public async Task<ActionResult<User>> GetRequestsById(int id)
+        // GET: api/users/requests-by-id/5
+        [HttpGet("requests-assigned-to-user/{id}")]
+        public async Task<ActionResult<User>> GetRequestsAssignedToUser(int id)
         {
-            var requests = await db.Requests.Where(u => u.UserId == id).ToListAsync();
+            var requests = await db.Requests.Where(u => u.AssigneeId == id).ToListAsync();
 
             if (requests == null)
             {
@@ -210,7 +210,7 @@ namespace InterApro.Controllers
                 return Ok(new { success = 1, message = "Not Requests Found", requests });
             }
 
-            var index = 0;
+            //var index = 0;
             foreach (var request in requests)
             {
                 var assigneeId = await db.User.FindAsync(request.AssigneeId);
@@ -275,8 +275,8 @@ namespace InterApro.Controllers
         }
 
         // DELETE: api/Users/delete-request/5
-        [HttpDelete("delete-request/{id}")]
-        public async Task<ActionResult<UserViewModelLogged>> DeleteRequest(int id)
+        [HttpDelete("delete-request-by-id/{id}")]
+        public async Task<ActionResult<UserViewModelLogged>> DeleteRequestById(int id)
         {
             var request = await db.Requests.FindAsync(id);
             if (request == null)
@@ -311,8 +311,9 @@ namespace InterApro.Controllers
                 return Unauthorized(new { success = 0, message = "Unauthorized Account" });
             }
 
-            return Ok(new { 
-                success = 1, 
+            return Ok(new
+            {
+                success = 1,
                 message = "Access Granted",
                 userId = u[0].Id,
                 firstName = u[0].FirstName,
@@ -376,8 +377,8 @@ namespace InterApro.Controllers
         // PUT: api/users/edit-requet/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("edit-request/{id}")]
-        public async Task<IActionResult> PutRequest(int id, Requests request)
+        [HttpPut("edit-request-by-creator/{id}")]
+        public async Task<IActionResult> EditRequestByCreator(int id, Requests request)
         {
             if (id != request.Id)
             {
@@ -387,6 +388,89 @@ namespace InterApro.Controllers
             var localR = await db.Requests.FindAsync(request.Id);
             localR.Price = request.Price;
             localR.Description = request.Description;
+
+            db.Entry(localR).State = EntityState.Modified;
+
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!RequestExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Ok(new { success = 1, message = "Request Successfully Updated" });
+        }
+
+        // PUT: api/users/edit-requet/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
+        [HttpPut("edit-request-by-internal/{id}")]
+        public async Task<IActionResult> EditRequestByInternal(int id, Request request)
+        {
+
+            var localR = await db.Requests.FindAsync(id);
+            var localU = await db.User.FindAsync(request.AssigneeId);
+
+            localR.OrderStatus = 0;
+            localR.OrderStatusDescription = "Denied by";
+
+            switch (localU.Rol)
+            {
+                case 2:
+                    localR.OrderStatusDescription += " Financial Approver 1";
+                    break;
+                case 3:
+                    localR.OrderStatusDescription += " Financial Approver 2";
+                    break;
+                case 4:
+                    localR.OrderStatusDescription += " Financial Approver 3";
+                    break;
+                default:
+                    localR.OrderStatusDescription += " Boss";
+                    break;
+            }
+
+            if (request.Approve)
+            {
+                localR.OrderStatus = 1;
+                localR.OrderStatusDescription = "Assigned to";
+                var rol = 0;
+
+                if (localR.Price > 0 && localR.Price < 100000)
+                {
+                    rol = 2;
+                    localR.OrderStatusDescription += " Financial Approver 1";
+                }
+                else if (localR.Price > 100000 && localR.Price < 500000)
+                {
+                    rol = 3;
+                    localR.OrderStatusDescription += " Financial Approver 2";
+                }
+                else if (localR.Price > 500000 && localR.Price < 1000000)
+                {
+                    rol = 4;
+                    localR.OrderStatusDescription += " Financial Approver 3";
+                }
+
+                var localA = await db.User.Where(u => u.Rol == rol).ToListAsync();
+
+                if (localA.Count() == 0)
+                {
+                    return NotFound(new { success = 0, message = "Admin user needs to create a" + localR.OrderStatusDescription + " account!" });
+                }
+
+                localR.AssigneeId = localA[0].Id;
+                localR.AssigneeName = localA[0].FirstName + " " + localA[0].LastName;
+            }
 
             db.Entry(localR).State = EntityState.Modified;
 
@@ -436,5 +520,11 @@ namespace InterApro.Controllers
         public int Success { get; set; }
         public string Message { get; set; }
         public List<UserViewModelLogged> User { get; set; }
+    }
+
+    public class Request
+    {
+        public Boolean Approve { get; set; }
+        public int AssigneeId { get; set; }
     }
 }

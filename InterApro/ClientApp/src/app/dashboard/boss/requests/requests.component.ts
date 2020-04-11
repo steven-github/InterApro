@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/_services/user.service';
 import { FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+declare var $: any;
 
 @Component({
   selector: 'app-boss-requests',
@@ -25,7 +26,7 @@ export class RequestsBossComponent implements OnInit {
 
   getRequestsById(): void {
     this.loading = true;
-    this._userService.getRequestsById(this._userService.currentUserValue.userId).subscribe(results => {
+    this._userService.getRequestsAssignedToUser(this._userService.currentUserValue.userId).subscribe(results => {
       console.log('getRequests', results);
       if (results['success'] == 0) {
         this.toastr.error(results['message'], 'Attention', {
@@ -51,6 +52,39 @@ export class RequestsBossComponent implements OnInit {
         this.loading = false;
       });
     });
+  }
+
+  approveRequest(requestId: number) {
+    console.log('approveRequest', requestId);
+    this._userService.editRequestByInternal(requestId, true, this._userService.currentUserValue.userId).subscribe(results => {
+      console.log('editRequestByInternal', results);
+      if (results['success'] == 0) {
+        this.toastr.error(results['message'], 'Attention', {
+          timeOut: 1500,
+          progressBar: true
+        }).onHidden.subscribe(() => {
+          this.loading = false;
+        });
+      } else {
+        this.toastr.success(results['message'], 'Success', {
+          timeOut: 500,
+          progressBar: true
+        }).onHidden.subscribe(() => {
+          this.requests = results['requests'];
+          this.loading = false;
+        });
+      }
+    }, error => {
+      this.toastr.error(error, 'Attention', {
+        timeOut: 1500,
+        progressBar: true
+      }).onHidden.subscribe(() => {
+        this.loading = false;
+      });
+    });
+  }
+  rejectRequest(id: number) {
+    console.log('rejectRequest', id);
   }
 
 }

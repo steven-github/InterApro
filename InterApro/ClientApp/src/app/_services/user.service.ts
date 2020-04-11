@@ -72,8 +72,8 @@ export class UserService {
     return this.http.get<Requests[]>(this.baseUrl + 'api/users/request/' + id);
   }
 
-  getRequestsById(id): Observable<Requests[]> {
-    return this.http.get<Requests[]>(this.baseUrl + 'api/users/request-by-id/' + id);
+  getRequestsAssignedToUser(id): Observable<Requests[]> {
+    return this.http.get<Requests[]>(this.baseUrl + 'api/users/requests-assigned-to-user/' + id);
   }
 
   getAssignee(id): Observable<User[]> {
@@ -124,11 +124,18 @@ export class UserService {
     }, httpOptions);
   }
 
-  editRequest(id: number, form: any): Observable<any> {
-    return this.http.put(this.baseUrl + 'api/users/edit-request/' + id, { 
+  editRequestByCreator(id: number, form: any): Observable<any> {
+    return this.http.put(this.baseUrl + 'api/users/edit-request-by-creator/' + id, { 
       'Id': id,
       'Price': form.controls.price.value,
       'Description': form.controls.description.value
+    }, httpOptions);
+  }
+
+  editRequestByInternal(requestId: number, approve: boolean, assigneeId: number): Observable<any> {
+    return this.http.put(this.baseUrl + 'api/users/edit-request-by-internal/' + requestId, {
+      'Approve': approve,
+      'AssigneeId': assigneeId
     }, httpOptions);
   }
 
@@ -136,8 +143,8 @@ export class UserService {
     return this.http.delete(this.baseUrl + 'api/users/' + id, httpOptions);
   }
 
-  deleteRequest(id: number): Observable<any> {
-    return this.http.delete(this.baseUrl + 'api/users/delete-request/' + id, httpOptions);
+  deleteRequestById(id: number): Observable<any> {
+    return this.http.delete(this.baseUrl + 'api/users/delete-request-by-id/' + id, httpOptions);
   }
 
   loginUser(form: any): Observable<Response> {
