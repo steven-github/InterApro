@@ -23,25 +23,28 @@
           <li class="nav-item" *ngIf="!_userService.currentUserValue">
             <a class="nav-link text-dark" [routerLink]="['/log-in']" routerLinkActive="active">LogIn</a>
           </li>
-          <li class="nav-item" *ngIf="_userService.currentUser.isAdmin">
+          <li class="nav-item" *ngIf="_userService.currentUserValue.isAdmin">
             <a class="nav-link text-dark" [routerLink]="['/dashboard/admin']" routerLinkActive="active">Admin</a>
           </li>
-          <li class="nav-item" *ngIf="_userService.currentUser.isAdmin || _userService.currentUser.rol === 0">
+          <li class="nav-item" *ngIf="_userService.currentUserValue.isAdmin || _userService.currentUserValue.rol === 0">
             <a class="nav-link text-dark" [routerLink]="['/dashboard/buyer']" routerLinkActive="active">
-              <span *ngIf="_userService.currentUser.isAdmin">Buyer</span>
-              <span *ngIf="_userService.currentUser.rol === 0">My Dashboard</span>
+              <span *ngIf="_userService.currentUserValue.isAdmin">Buyer</span>
+              <span *ngIf="_userService.currentUserValue.rol === 0">My Dashboard</span>
             </a>
           </li>
-          <li class="nav-item" *ngIf="_userService.currentUser.isAdmin || _userService.currentUser.rol === 1">
+          <li class="nav-item" *ngIf="_userService.currentUserValue.isAdmin || _userService.currentUserValue.rol === 1">
             <a class="nav-link text-dark" [routerLink]="['/dashboard/boss']" routerLinkActive="active">
-              <span *ngIf="_userService.currentUser.isAdmin">Boss</span>
-              <span *ngIf="_userService.currentUser.rol === 1">My Dashboard</span>
+              <span *ngIf="_userService.currentUserValue.isAdmin">Boss</span>
+              <span *ngIf="_userService.currentUserValue.rol === 1">My Dashboard</span>
             </a>
           </li>
-          <li class="nav-item" *ngIf="_userService.currentUser.isAdmin || _userService.currentUser.rol === 2">
+          <li class="nav-item"
+            *ngIf="_userService.currentUserValue.isAdmin || (_userService.currentUserValue.rol === 2 || _userService.currentUserValue.rol === 3 || _userService.currentUserValue.rol === 4)">
             <a class="nav-link text-dark" [routerLink]="['/dashboard/financial-approver']" routerLinkActive="active">
-              <span *ngIf="_userService.currentUser.isAdmin">Financial Approval</span>
-              <span *ngIf="_userService.currentUser.rol === 2">My Dashboard</span>
+              <span *ngIf="_userService.currentUserValue.isAdmin">Financial Approval</span>
+              <span
+                *ngIf="_userService.currentUserValue.rol === 2 || _userService.currentUserValue.rol === 3 || _userService.currentUserValue.rol === 4">My
+                Dashboard</span>
             </a>
           </li>
           <!--<li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="!_userService.currentUser">

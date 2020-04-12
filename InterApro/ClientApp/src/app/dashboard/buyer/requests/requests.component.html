@@ -1,66 +1,10 @@
-<!-- <div class="row mt-3 mb-3">
-  <div class="col-lg-6">
-    <h3 class="text-info">Pending Requests</h3>
-  </div>
-  <div class="col-lg-6 text-right">
-    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createRequest"><i
-        class="fa fa-plus-circle" aria-hidden="true"></i> Create New Request</button>
-  </div>
-</div>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Description</th>
-      <th scope="col">Price</th>
-      <th scope="col">Status</th>
-      <th scope="col">Assignee</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Laptop Lenovo IdeaPad 330-15IKB 15.6'' HD, Intel Core i5-7200U 2.50GHz, 6GB, 2TB, Windows 10 Home, Gris</td>
-      <td>$1500</td>
-      <td><span class="badge badge-pill badge-info">Analysis</span></td>
-      <td>Apro2</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Apple MacBook Pro Retina MVVJ2E/A 16", Intel Core i7 2.60GHz, 16GB, 512GB SSD, macOS Catalina, Space Gray
-        (Enero 2020)</td>
-      <td>$3500</td>
-      <td><span class="badge badge-pill badge-info">Analysis</span></td>
-      <td>Apro3</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>HP Value Receipt Printer II Impresora de Tickets, Térmica Directa, 150mm/s, Serial, USB, Negro</td>
-      <td>$800</td>
-      <td><span class="badge badge-pill badge-info">Analysis</span></td>
-      <td>Apro1</td>
-    </tr>
-    <tr>
-      <th scope="row">4</th>
-      <td>Monitor LG 22MK430H-B LED 21.5'', Full HD, Widescreen, FreeSync, HDMI, Negro</td>
-      <td>$200</td>
-      <td><span class="badge badge-pill badge-info">Analysis</span></td>
-      <td>Boss</td>
-    </tr>
-    <tr>
-      <th scope="row">5</th>
-      <td>Memoria USB SanDisk IXpand Mini, 128GB, USB 3.0/Lightning, Gris/Plata</td>
-      <td>$100</td>
-      <td><span class="badge badge-pill badge-secondary">Pending</span></td>
-      <td>-</td>
-    </tr>
-  </tbody>
-</table> -->
-
 <div class="row mt-3 mb-3">
-    <div class="col-lg-12 text-right">
-        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createRequest"><i
-                class="fa fa-plus-circle" aria-hidden="true"></i> Create Request</button>
+    <div class="col-lg-6 text-left">
+        <h3 class="text-info mt-3 mb-3">Your Pending Requests</h3>
+    </div>
+    <div class="col-lg-6 text-right">
+        <button type="button" class="btn btn-info mt-3" data-toggle="modal" data-target="#createRequest">
+            <i class="fa fa-plus-circle" aria-hidden="true"></i> Create Request</button>
     </div>
 </div>
 
@@ -72,34 +16,33 @@
             </div>
         </div>
 
-        <table class="table table-striped">
+        <table class="table table-striped table-sm">
             <thead>
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Description</th>
                     <th scope="col">Price</th>
-                    <th scope="col">Assigned To</th>
-                    <th scope="col">OrderStatus</th>
+                    <th scope="col">Status</th>
                     <th scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <ng-container *ngIf="requests && requests.length > 0">
-                    <tr *ngFor="let request of requests">
+                    <tr *ngFor="let request of requests"
+                        [ngClass]="{ 'danger': request.orderStatus == -1, 'success': request.orderStatus == 1 }">
                         <td>{{ request.id }}</td>
                         <td>{{ request.description }}</td>
                         <td>{{ request.price | currency}}</td>
-                        <td>{{request.assigneeName}}</td>
-                        <td><span class="badge badge-pill"
-                                [ngClass]="{'badge-secondary': request.orderStatus == 0, 'badge-success': request.orderStatus == 1}">{{ request.orderStatusDescription }}</span>
-                        </td>
+                        <td>{{ request.orderStatusDescription }} {{request.assigneeName}}</td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <button type="button" class="btn btn-link text-dark" data-toggle="tooltip"
-                                    data-placement="top" title="Edit" (click)="editRequest(request.id)"><i
+                                    data-placement="top" title="Edit" (click)="editRequest(request.id)"
+                                    [disabled]="request.orderStatus != 0 || request.assigneeId >= 2"><i
                                         class="fa fa-pencil" aria-hidden="true"></i></button>
                                 <button type="button" class="btn btn-link text-danger" data-toggle="tooltip"
-                                    data-placement="top" title="Delete" (click)="deleteRequestById(request.id)"><i
+                                    data-placement="top" title="Delete" (click)="deleteRequestById(request.id)"
+                                    [disabled]="(request.orderStatus != 0 || request.assigneeId >= 2)"><i
                                         class="fa fa-trash" aria-hidden="true"></i></button>
                             </div>
                         </td>

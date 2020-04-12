@@ -46,7 +46,7 @@ namespace InterApro.Models
         public string AssigneeName { get; set; }
         public decimal Price { get; set; }
         public string Description { get; set; }
-        public int OrderStatus { get; set; } = 0; //0 Pending - 1 Approved by Boss - 2 Rejected by Boss - 3 Approved by FA - 4 Rejected by FA
+        public int OrderStatus { get; set; } = 0; //-1 Rejected - 0 Pending - 1 Approved
         public string OrderStatusDescription { get; set; } = "Assigned to Boss"; //0 Pending - 1 Approved by Boss - 2 Rejected by Boss - 3 Approved by FA - 4 Rejected by FA
     }
 

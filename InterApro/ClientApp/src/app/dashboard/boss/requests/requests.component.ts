@@ -54,9 +54,9 @@ export class RequestsBossComponent implements OnInit {
     });
   }
 
-  approveRequest(requestId: number) {
+  modifyRequest(requestId: number, approveRequest: boolean) {
     console.log('approveRequest', requestId);
-    this._userService.editRequestByInternal(requestId, true, this._userService.currentUserValue.userId).subscribe(results => {
+    this._userService.editRequestByInternal(requestId, approveRequest, this._userService.currentUserValue.userId).subscribe(results => {
       console.log('editRequestByInternal', results);
       if (results['success'] == 0) {
         this.toastr.error(results['message'], 'Attention', {
@@ -70,7 +70,8 @@ export class RequestsBossComponent implements OnInit {
           timeOut: 500,
           progressBar: true
         }).onHidden.subscribe(() => {
-          this.requests = results['requests'];
+          // this.requests = results['requests'];
+          this.getRequestsById();
           this.loading = false;
         });
       }
