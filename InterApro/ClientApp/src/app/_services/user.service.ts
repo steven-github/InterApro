@@ -125,7 +125,7 @@ export class UserService {
   }
 
   editRequestByCreator(id: number, form: any): Observable<any> {
-    return this.http.put(this.baseUrl + 'api/users/edit-request-by-creator/' + id, { 
+    return this.http.put(this.baseUrl + 'api/users/edit-request-by-creator/' + id, {
       'Id': id,
       'Price': form.controls.price.value,
       'Description': form.controls.description.value
@@ -169,7 +169,7 @@ export class UserService {
   }
 
   createRequest(form: any) {
-    console.log('createRequest', form);      
+    console.log('createRequest', form);
     return this.http.post<Response>(this.baseUrl + 'api/users/create-request', {
       'userId': form.controls.userId.value,
       'FirstName': form.controls.firstName.value,

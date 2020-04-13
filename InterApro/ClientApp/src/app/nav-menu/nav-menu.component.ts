@@ -11,11 +11,7 @@ export class NavMenuComponent {
   isExpanded = false;
 
   constructor(private _userService: UserService, private _router: Router) {
-    if(this._userService.currentUserValue == null) {
-      
-    }
-    console.log('currentUserValue', this._userService.currentUserValue);
-    console.log('currentUser', this._userService.currentUser);
+    // this._userService.currentUser = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : null;
   }
 
   collapse() {

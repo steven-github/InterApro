@@ -7,21 +7,17 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" [ngClass]="{ show: isExpanded }">
-        <ul class="navbar-nav flex-grow">
-          <!-- <li class="nav-item" [routerLinkActive]="['link-active']" [routerLinkActiveOptions]="{ exact: true }">
-<a class="nav-link text-dark" [routerLink]="['/']">Home</a>
-</li>
-<li class="nav-item" [routerLinkActive]="['link-active']">
-<a class="nav-link text-dark" [routerLink]="['/counter']">Counter</a>
-</li>
-<li class="nav-item" [routerLinkActive]="['link-active']">
-<a class="nav-link text-dark" [routerLink]="['/fetch-data']">Fetch data</a>
-</li>
-<li class="nav-item" [routerLinkActive]="['link-active']">
-<a class="nav-link text-dark" [routerLink]="['/fetch-data']">Fetch data</a>
-</li> -->
-          <li class="nav-item" *ngIf="!_userService.currentUserValue">
+        <ul class="navbar-nav flex-grow" *ngIf="!_userService.currentUserValue">
+          <li class="nav-item" [routerLinkActive]="['link-active']" [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link text-dark" [routerLink]="['/']">Home</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link text-dark" [routerLink]="['/log-in']" routerLinkActive="active">LogIn</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav flex-grow" *ngIf="_userService.currentUserValue">
+          <li class="nav-item" [routerLinkActive]="['link-active']" [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link text-dark" [routerLink]="['/']">Home</a>
           </li>
           <li class="nav-item" *ngIf="_userService.currentUserValue.isAdmin">
             <a class="nav-link text-dark" [routerLink]="['/dashboard/admin']" routerLinkActive="active">Admin</a>
@@ -47,9 +43,6 @@
                 Dashboard</span>
             </a>
           </li>
-          <!--<li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="!_userService.currentUser">
-            <a class="nav-link text-dark" [routerLink]="['/forgot-password']">Forgot Password</a>
-          </li>-->
           <li class="nav-item" *ngIf="_userService.currentUserValue" (click)="logout()">
             <a href="javascript:void(0);" class="nav-link text-dark">Logout</a>
           </li>
