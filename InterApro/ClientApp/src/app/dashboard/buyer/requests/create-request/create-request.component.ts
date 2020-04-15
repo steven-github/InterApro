@@ -30,6 +30,7 @@ export class CreateRequestComponent implements OnInit {
   ngOnInit() {
     this.createRequestForm = this.formBuilder.group({
       userId: ['', Validators.required],
+      bossId: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -96,6 +97,7 @@ export class CreateRequestComponent implements OnInit {
         }).onHidden.subscribe(() => {
           this.boss = results;
           this.createRequestForm.get('userId').setValue(this._userService.currentUserValue.userId);
+          this.createRequestForm.get('bossId').setValue(this._userService.currentUserValue.bossId);
           this.createRequestForm.get('firstName').setValue(this._userService.currentUserValue.firstName);
           this.createRequestForm.get('lastName').setValue(this._userService.currentUserValue.lastName);
           this.createRequestForm.get('email').setValue(this._userService.currentUserValue.email);

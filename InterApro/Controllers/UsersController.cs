@@ -427,21 +427,21 @@ namespace InterApro.Controllers
             var localU = await db.User.FindAsync(request.AssigneeId);
 
             localR.OrderStatus = -1;
-            var status = "Rejected by";
+            var status = "Rejected by ";
 
             switch (localU.Rol)
             {
                 case 2:
-                    localR.OrderStatusDescription += " financial approver 1";
+                    localR.OrderStatusDescription += "financial approver 1";
                     break;
                 case 3:
-                    localR.OrderStatusDescription += " financial approver 2";
+                    localR.OrderStatusDescription += "financial approver 2";
                     break;
                 case 4:
-                    localR.OrderStatusDescription += " financial approver 3";
+                    localR.OrderStatusDescription += "financial approver 3";
                     break;
                 default:
-                    localR.OrderStatusDescription += " boss";
+                    localR.OrderStatusDescription += "boss";
                     break;
             }
 
@@ -450,36 +450,36 @@ namespace InterApro.Controllers
                 if (localU.Rol > 1)
                 {
                     localR.OrderStatus = 1;
-                    status = "Approved by";
+                    status = "Approved by ";
                 }
                 else
                 {
                     localR.OrderStatus = 0;
-                    status = "Assigned to";
+                    status = "Assigned to ";
                 }
                 var rol = 0;
 
                 if (localR.Price > 0 && localR.Price < 100000)
                 {
                     rol = 2;
-                    localR.OrderStatusDescription += " financial approver 1";
+                    localR.OrderStatusDescription = "financial approver 1";
                 }
                 else if (localR.Price > 100000 && localR.Price < 1000000)
                 {
                     rol = 3;
-                    localR.OrderStatusDescription += " financial approver 2";
+                    localR.OrderStatusDescription = " financial approver 2";
                 }
                 else if (localR.Price > 1000000)
                 {
                     rol = 4;
-                    localR.OrderStatusDescription += " financial approver 3";
+                    localR.OrderStatusDescription += "financial approver 3";
                 }
 
                 var localA = await db.User.Where(u => u.Rol == rol).ToListAsync();
 
                 if (localA.Count() == 0)
                 {
-                    return NotFound(new { success = 0, message = "Admin needs to create a" + localR.OrderStatusDescription + " account!" });
+                    return NotFound(new { success = 0, message = "Admin needs to create a " + localR.OrderStatusDescription + " account!" });
                 }
 
                 localR.AssigneeId = localA[0].Id;

@@ -35,7 +35,6 @@
                         <td>{{ request.price | currency}}</td>
                         <td>{{ request.orderStatusDescription }} {{request.assigneeName}}</td>
                         <td>
-                            {{request.orderStatus }} / {{request.assigneeId}}
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <button type="button" class="btn btn-link text-dark" data-toggle="tooltip"
                                     data-placement="top" title="Edit" (click)="editRequest(request.id)"
