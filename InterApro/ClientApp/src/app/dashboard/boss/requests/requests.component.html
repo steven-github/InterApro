@@ -28,14 +28,14 @@
                         <td>{{ request.id }}</td>
                         <td>{{ request.description }}</td>
                         <td>{{ request.price | currency}}</td>
-                        <td>{{request.firstName}} {{request.lastName}}</td>
-                        <td *ngIf="request.orderStatus == 0">
+                        <td>{{request.firstName}} {{request.lastName}} - {{request.orderStatus}} / {{request.bossId}} / {{request.assigneeId}}</td>
+                        <td *ngIf="request.bossId == request.assigneeId">
                             <button type="button" class="btn btn-outline-success btn-sm mr-1"
                                 (click)="modifyRequest(request.id, true)">Approve</button>
                             <button type="button" class="btn btn-outline-danger btn-sm"
                                 (click)="modifyRequest(request.id, false)">Reject</button>
                         </td>
-                        <td *ngIf="request.orderStatus != 0">
+                        <td *ngIf="request.bossId != request.assigneeId">
                             <span class="badge badge-pill"
                                 [ngClass]="{ 'badge-danger': request.orderStatus == -1, 'badge-success': request.orderStatus == 1 }">{{ request.orderStatusDescription }}</span>
                         </td>

@@ -26,7 +26,7 @@ export class RequestsBossComponent implements OnInit {
 
   getRequestsById(): void {
     this.loading = true;
-    this._userService.getRequestsAssignedToUser(this._userService.currentUserValue.userId).subscribe(results => {
+    this._userService.getRequestsAssignedToBoss(this._userService.currentUserValue.userId).subscribe(results => {
       console.log('getRequests', results);
       if (results['success'] == 0) {
         this.toastr.error(results['message'], 'Attention', {

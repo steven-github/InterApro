@@ -66,6 +66,26 @@ namespace InterApro.Controllers
             });
         }
 
+        // GET: api/users/requests-by-id/5
+        [HttpGet("requests-assigned-to-boss/{id}")]
+        public async Task<ActionResult<User>> GetRequestsAssignedToBoss(int id)
+        {
+            var requests = await db.Requests.Where(u => u.BossId == id).ToListAsync();
+
+            if (requests == null)
+            {
+                return NotFound(new { success = 0, message = "Requests Not Found" });
+            }
+
+            // return request;
+            return Ok(new
+            {
+                success = 1,
+                message = "Requests Successfully Found",
+                requests
+            });
+        }
+
         // GET: api/Users/5
         [HttpGet("request/{id}")]
         public async Task<ActionResult<User>> GetRequest(int id)

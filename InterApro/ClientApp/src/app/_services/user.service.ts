@@ -76,6 +76,10 @@ export class UserService {
     return this.http.get<Requests[]>(this.baseUrl + 'api/users/requests-assigned-to-user/' + id);
   }
 
+  getRequestsAssignedToBoss(id): Observable<Requests[]> {
+    return this.http.get<Requests[]>(this.baseUrl + 'api/users/requests-assigned-to-boss/' + id);
+  }
+
   getAssignee(id): Observable<User[]> {
     return this.http.get<User[]>(this.baseUrl + 'api/users/assignee/' + id);
   }
@@ -172,6 +176,7 @@ export class UserService {
     console.log('createRequest', form);
     return this.http.post<Response>(this.baseUrl + 'api/users/create-request', {
       'userId': form.controls.userId.value,
+      'bossId': form.controls.bossId.value,
       'FirstName': form.controls.firstName.value,
       'LastName': form.controls.lastName.value,
       'Email': form.controls.email.value,

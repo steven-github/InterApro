@@ -38,11 +38,11 @@
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <button type="button" class="btn btn-link text-dark" data-toggle="tooltip"
                                     data-placement="top" title="Edit" (click)="editRequest(request.id)"
-                                    [disabled]="request.orderStatus != 0 "><i
+                                    [disabled]="request.bossId != request.assigneeId"><i
                                         class="fa fa-pencil" aria-hidden="true"></i></button>
                                 <button type="button" class="btn btn-link text-danger" data-toggle="tooltip"
                                     data-placement="top" title="Delete" (click)="deleteRequestById(request.id)"
-                                    [disabled]="request.orderStatus != 0"><i
+                                    [disabled]="request.bossId != request.assigneeId"><i
                                         class="fa fa-trash" aria-hidden="true"></i></button>
                             </div>
                         </td>
