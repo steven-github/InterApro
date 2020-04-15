@@ -15,6 +15,7 @@
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th scope="col">Id</th>
                     <th scope="col">Name</th>
                     <th scope="col">Email</th>
                     <th scope="col">Username</th>
@@ -26,6 +27,7 @@
             <tbody>
                 <ng-container *ngIf="users && users.length > 0">
                     <tr *ngFor="let user of users; let i = index">
+                        <td>{{ user.id }}</td>
                         <td>{{ user.firstName }} {{ user.lastName }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ user.username }}</td>

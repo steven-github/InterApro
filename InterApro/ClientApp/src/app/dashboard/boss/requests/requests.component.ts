@@ -77,7 +77,7 @@ export class RequestsBossComponent implements OnInit {
       }
     }, error => {
       this.toastr.error(error, 'Attention', {
-        timeOut: 1500,
+        timeOut: 3500,
         progressBar: true
       }).onHidden.subscribe(() => {
         this.loading = false;

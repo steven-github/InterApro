@@ -252,9 +252,15 @@ namespace InterApro.Controllers
         public async Task<ActionResult<UserViewModelLogged>> DeleteUser(int id)
         {
             var user = await db.User.FindAsync(id);
+            var requests = await db.Requests.Where(u => u.AssigneeId == id).ToListAsync();
             if (user == null)
             {
                 return NotFound(new { success = 0, message = "User Not Found" });
+            }
+
+            if (requests.Count() > 0)
+            {
+                return Conflict(new { success = 0, message = "Users with active request can't be deleted!" });
             }
 
             db.User.Remove(user);
@@ -421,7 +427,7 @@ namespace InterApro.Controllers
             var localU = await db.User.FindAsync(request.AssigneeId);
 
             localR.OrderStatus = -1;
-            localR.OrderStatusDescription = "Rejected by";
+            var status = "Rejected by";
 
             switch (localU.Rol)
             {
@@ -435,7 +441,7 @@ namespace InterApro.Controllers
                     localR.OrderStatusDescription += " financial approver 3";
                     break;
                 default:
-                    localR.OrderStatusDescription += " Boss";
+                    localR.OrderStatusDescription += " boss";
                     break;
             }
 
@@ -444,12 +450,12 @@ namespace InterApro.Controllers
                 if (localU.Rol > 1)
                 {
                     localR.OrderStatus = 1;
-                    localR.OrderStatusDescription = "Approved by";
+                    status = "Approved by";
                 }
                 else
                 {
                     localR.OrderStatus = 0;
-                    localR.OrderStatusDescription = "Assigned to";
+                    status = "Assigned to";
                 }
                 var rol = 0;
 
@@ -458,12 +464,12 @@ namespace InterApro.Controllers
                     rol = 2;
                     localR.OrderStatusDescription += " financial approver 1";
                 }
-                else if (localR.Price > 100000 && localR.Price < 500000)
+                else if (localR.Price > 100000 && localR.Price < 1000000)
                 {
                     rol = 3;
                     localR.OrderStatusDescription += " financial approver 2";
                 }
-                else if (localR.Price > 500000 && localR.Price < 1000000)
+                else if (localR.Price > 1000000)
                 {
                     rol = 4;
                     localR.OrderStatusDescription += " financial approver 3";
@@ -473,11 +479,12 @@ namespace InterApro.Controllers
 
                 if (localA.Count() == 0)
                 {
-                    return NotFound(new { success = 0, message = "Admin user needs to create a" + localR.OrderStatusDescription + " account!" });
+                    return NotFound(new { success = 0, message = "Admin needs to create a" + localR.OrderStatusDescription + " account!" });
                 }
 
                 localR.AssigneeId = localA[0].Id;
                 localR.AssigneeName = localA[0].FirstName + " " + localA[0].LastName;
+                localR.OrderStatusDescription = status + localR.OrderStatusDescription;
             }
 
             db.Entry(localR).State = EntityState.Modified;

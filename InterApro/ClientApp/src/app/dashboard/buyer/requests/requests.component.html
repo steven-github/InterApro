@@ -35,14 +35,15 @@
                         <td>{{ request.price | currency}}</td>
                         <td>{{ request.orderStatusDescription }} {{request.assigneeName}}</td>
                         <td>
+                            {{request.orderStatus }} / {{request.assigneeId}}
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <button type="button" class="btn btn-link text-dark" data-toggle="tooltip"
                                     data-placement="top" title="Edit" (click)="editRequest(request.id)"
-                                    [disabled]="request.orderStatus != 0 || request.assigneeId >= 2"><i
+                                    [disabled]="request.orderStatus != 0 "><i
                                         class="fa fa-pencil" aria-hidden="true"></i></button>
                                 <button type="button" class="btn btn-link text-danger" data-toggle="tooltip"
                                     data-placement="top" title="Delete" (click)="deleteRequestById(request.id)"
-                                    [disabled]="(request.orderStatus != 0 || request.assigneeId >= 2)"><i
+                                    [disabled]="request.orderStatus != 0"><i
                                         class="fa fa-trash" aria-hidden="true"></i></button>
                             </div>
                         </td>
@@ -82,7 +83,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editUserLabel">Edit Request</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModal()">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>

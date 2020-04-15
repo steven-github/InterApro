@@ -88,6 +88,7 @@ export class AdminUsersComponent implements OnInit {
   deleteUser(id: number): void {
     this._userService.deleteUser(id).subscribe(results => {
       if (results['success'] == 0) {
+        debugger;
         this.toastr.error(results['message'], 'Attention', {
           timeOut: 1500,
           progressBar: true
@@ -98,8 +99,8 @@ export class AdminUsersComponent implements OnInit {
         this.getUsers();
       }
     }, error => {
-      this.toastr.error(error.error['message'], 'Attention', {
-        timeOut: 1500,
+      this.toastr.error(error, 'Attention', {
+        timeOut:3500,
         progressBar: true
       }).onHidden.subscribe(() => {
         this.loading = false;
