@@ -3,6 +3,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from '../_services/user.service';
 import { Observable } from 'rxjs';
 import { User } from '../interfaces';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-log-in',
@@ -13,18 +15,15 @@ export class LogInComponent implements OnInit {
 
   loginForm: FormGroup;
   submitted = false;
+  loading: boolean = false;
+  user: User[];
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private _userService: UserService, private formBuilder: FormBuilder, private toastr: ToastrService, private _router: Router) { }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
       username: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required],
-      department: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(5)]]
     });
   }
 
@@ -39,8 +38,50 @@ export class LogInComponent implements OnInit {
       return;
     }
 
-    // display form values on success
-    alert('INFO:\n\n' + JSON.stringify(this.loginForm.value, null, 4));
+    this.loading = true;
+
+    this._userService.loginUser(this.loginForm).subscribe(results => {
+      if (results['success'] == 0) {
+        this.toastr.error(results['message'], 'Attention', {
+          timeOut: 1500,
+          progressBar: true
+        }).onHidden.subscribe(() => {
+          this.loading = false;
+        });
+      } else {
+        this.toastr.success(results['message'], 'Success', {
+          timeOut: 1000,
+          progressBar: true
+        }).onHidden.subscribe(() => {
+          // localStorage.setItem('currentUser', JSON.stringify(results));
+          //this._userService.currentUser = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : null;
+          switch (results['rol']) {
+            case -1:
+              this._router.navigate(['/dashboard/admin']);
+              break;
+            case 0:
+              this._router.navigate(['/dashboard/buyer']);
+              break;
+            case 1:
+              this._router.navigate(['/dashboard/boss']);
+              break;
+            default:
+              this._router.navigate(['/dashboard/financial-approver']);
+          }
+          this.submitted = false;
+          this.loginForm.reset();
+          this.loading = false;
+          return false;
+        });
+      }
+    }, error => {
+      this.toastr.error(error, 'Attention', {
+        timeOut: 1500,
+        progressBar: true
+      }).onHidden.subscribe(() => {
+        this.loading = false;
+      });
+    });
   }
 
 }

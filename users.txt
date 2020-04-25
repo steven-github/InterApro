@@ -1,0 +1,4 @@
+UN: admin
+PW: jGl25bVBBBW96Qi9Te4V37Fnqchz/Eu4qB9vKrRIqRg=
+
+ng generate component dashboard/admin/edit-account --module=app.module

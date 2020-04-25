@@ -15,6 +15,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.2">
       <PrivateAssets>all</PrivateAssets>
@@ -35,11 +36,16 @@
 
   <ItemGroup>
     <None Remove="ClientApp\src\app\interfaces.ts" />
+    <None Remove="ClientApp\src\app\_helpers\error.interceptor.ts" />
+    <None Remove="ClientApp\src\app\_services\auth-guard.service.ts" />
+    <None Remove="ClientApp\src\app\_services\auth.service.ts" />
     <None Remove="ClientApp\src\app\_services\user.service.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\app\interfaces.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_helpers\error.interceptor.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\_services\auth-guard.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_services\user.service.ts" />
   </ItemGroup>
 
