@@ -11,9 +11,9 @@ namespace InterApro.Models.Mail
     {
         None,
         CreatedToBuyer,
-        CreatedToBoss,
-        RejectedByBoss,
-        ApprovedByBoss,
+        CreatedToManager,
+        RejectedByManager,
+        ApprovedByManager,
         ApprovedToFinance,
         RejectedByFinance,
         ApprovedByFinance,

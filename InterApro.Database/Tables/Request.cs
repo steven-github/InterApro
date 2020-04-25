@@ -16,6 +16,7 @@ namespace InterApro.Database.Tables
         public string RequestDescription {get; set;}
 
         [Column(TypeName = "decimal(18,4)")]
+        [DisplayFormat(DataFormatString = "{0:C}")]
         public decimal RequestAmount { get; set; }
 
         [Column(TypeName = "nvarchar(450)")]

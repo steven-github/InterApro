@@ -16,6 +16,14 @@ namespace InterApro.Web.Data
         [StringLength(128)]
         public string LastName { get; set; }
 
+        [NotMapped]
+        public string FullName { 
+            get
+            {
+                return string.Format("{0} {1}", FirstName, LastName);
+            } 
+        }
+
         public bool Status { get; set; }
 
         [Column(TypeName = "nvarchar(450)")]

@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace InterApro.Web.Areas.Identity.Pages.Account
 {
@@ -24,17 +25,20 @@ namespace InterApro.Web.Areas.Identity.Pages.Account
         private readonly UserManager<InterAproWebUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly RoleManager<InterAproWebRole> _roleManager;
 
         public RegisterModel(
             UserManager<InterAproWebUser> userManager,
             SignInManager<InterAproWebUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            RoleManager<InterAproWebRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         [BindProperty]
@@ -42,9 +46,12 @@ namespace InterApro.Web.Areas.Identity.Pages.Account
 
         public string ReturnUrl { get; set; }
 
+        public SelectList Managers { get; set; }
+        public SelectList Roles { get; set; }
+
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
-        public class InputModel
+        public class InputModel : IValidatableObject
         {
             [Required]
             [EmailAddress]
@@ -61,18 +68,43 @@ namespace InterApro.Web.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Required]
+            [Display(Name = "Role")]
+            public string SelectedRole { get; set; }
+            public string SelectedManager { get; set; }
+
+            public string BuyerRoleId { get; set; }
+
+            public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+            {
+   
+                if (SelectedRole.Equals("Buyer"))
+                {
+                    yield return new ValidationResult(
+                        $"For Buyer role, a manager must be selected.",
+                        new[] { nameof(SelectedManager) });
+                }
+            }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            var managersList = await _userManager.GetUsersInRoleAsync("Manager");
+            var rolesList = _roleManager.Roles.OrderBy(e => e.Name).ToList();
+
+            Managers = new SelectList(managersList, nameof(InterAproWebUser.Id), nameof(InterAproWebUser.FullName));
+            Roles = new SelectList(rolesList, nameof(InterAproWebRole.Name), nameof(InterAproWebRole.Name));
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             if (ModelState.IsValid)
             {
                 var user = new InterAproWebUser { UserName = Input.Email, Email = Input.Email};
