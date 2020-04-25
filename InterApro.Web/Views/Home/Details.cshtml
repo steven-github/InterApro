@@ -1,0 +1,95 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using InterApro.Web.Data
+
+@inject SignInManager<InterAproWebUser> SignInManager
+@inject UserManager<InterAproWebUser> UserManager
+
+@model InterApro.Database.Tables.Request
+
+@{
+    ViewData["Title"] = "Request Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Request</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Request Description
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RequestDescription)
+        </dd>
+        <dt class="col-sm-2">
+            Request Amount
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RequestAmount)
+        </dd>
+        <dt class="col-sm-2">
+            Buyer
+        </dt>
+        <dd class="col-sm-10">
+            @UserManager.FindByIdAsync(Model.BuyerId).Result.FullName
+        </dd>
+        <dt class="col-sm-2">
+            Manager
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.ManagerId != null)
+            {
+                @Html.DisplayFor(model => model.ManagerId)
+            }
+        </dd>
+        <dt class="col-sm-2">
+            Finance
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.FinanceId != null)
+            {
+                @Html.DisplayFor(model => model.FinanceId)
+            }
+        </dd>
+        <dt class="col-sm-2">
+            Request Status
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RequestStatus.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Created)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Created)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Updated)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Updated)
+        </dd>
+    </dl>
+</div>
+<div>
+
+    @if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Manager"))
+    {
+        if (Model.RequestStatusId == 1)
+        {
+            <a asp-action="Approve" asp-route-id="@Model.RequestId" class="btn btn-success">Approve Request</a> <span> | </span>
+            <a asp-action="Reject" asp-route-id="@Model.RequestId" class="btn btn-danger">Reject Request</a> <span> | </span>
+        }
+    }
+    else if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Buyer"))
+    {
+        if (Model.RequestStatusId == 3)
+        {
+            <a asp-action="Approve" asp-route-id="@Model.RequestId" class="btn btn-success">Approve Request</a> <span> | </span>
+            <a asp-action="Reject" asp-route-id="@Model.RequestId" class="btn btn-danger">Reject Request</a> <span> | </span>
+        }
+    }
+    <a asp-action="Index">Back to Requests List</a>
+
+</div>
